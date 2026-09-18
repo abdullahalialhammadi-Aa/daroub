@@ -1,0 +1,21 @@
+import {DatabaseSync} from 'node:sqlite';
+import {readFileSync,mkdirSync,writeFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import assert from 'node:assert/strict';
+import ts from 'typescript';
+const sql=new DatabaseSync(':memory:');sql.exec(readFileSync('drizzle/0000_mushy_barracuda.sql','utf8'));
+const d1={prepare(query){return{bind(...values){return{query,values,async first(){return sql.prepare(query).get(...values)??null},async all(){return {results:sql.prepare(query).all(...values)}}}}}},async batch(statements){sql.exec('BEGIN');try{for(const s of statements)sql.prepare(s.query).run(...s.values);sql.exec('COMMIT')}catch(e){sql.exec('ROLLBACK');throw e}}};
+globalThis.testEnv={DB:d1};mkdirSync('work/test-sync',{recursive:true});
+for(const name of ['sync-server','sync-validation','preparation-schema']){const src=readFileSync(`lib/${name}.ts`,'utf8').replace(/from '(\.\/[^']+)'/g,"from '$1.mjs'").replace("import { env } from 'cloudflare:workers';",'const env = globalThis.testEnv;');writeFileSync(`work/test-sync/${name}.mjs`,ts.transpileModule(src,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText)}
+const {applyMutation,snapshot}=await import(pathToFileURL(resolve('work/test-sync/sync-server.mjs')));const {validateMutation}=await import(pathToFileURL(resolve('work/test-sync/sync-validation.mjs')));
+const trip={id:'trip1',title:'Test trip',destinationId:'liwa',terrainId:'desert',location:{lat:23,lon:53},startDate:'2026-10-01',endDate:'2026-10-02',groupSize:2,transport:'Car',notes:'',checklist:[{id:'water',label:'Water',category:'essentials',done:false}],revision:0,updatedAt:''};
+const mutation=(operationId,baseRevision,payload={...trip})=>validateMutation({operationId,entity:'trip',id:'trip1',baseRevision,payload});
+let count=0;async function check(name,fn){await fn();count++;console.log('PASS '+name)}
+await check('create, replay, and same-operation mismatch',async()=>{const m=mutation('create1',0);const a=await applyMutation('A',m);assert.equal(a.conflict,0);assert.deepEqual(await applyMutation('A',m),a);await assert.rejects(()=>applyMutation('A',mutation('create1',0,{...trip,title:'Changed'})),/reused/);assert.equal((await snapshot('A')).length,1)});
+await check('concurrent edits preserve exactly one conflict copy',async()=>{await Promise.all([applyMutation('A',mutation('edit1',1,{...trip,title:'First'})),applyMutation('A',mutation('edit2',1,{...trip,title:'Second'}))]);const records=await snapshot('A');assert.equal(records.length,2);assert.deepEqual(records.map(r=>r.record.title).sort(),['First','Second']);assert.equal(records.find(r=>r.id==='trip1').record.revision,2)});
+await check('stale delete preserves live edit',async()=>{const r=await applyMutation('A',mutation('stale-delete',1,null));assert.equal(r.conflict,1);assert.equal((await snapshot('A')).find(r=>r.id==='trip1').deleted,false)});
+await check('delete tombstone prevents resurrection',async()=>{await applyMutation('A',mutation('delete1',2,null));const r=await applyMutation('A',mutation('late-edit',2,{...trip,title:'Recovered edit'}));assert.equal(r.conflict,1);assert.equal((await snapshot('A')).find(r=>r.id==='trip1').deleted,true);assert.ok((await snapshot('A')).some(r=>r.record.title==='Recovered edit'));const n=(await snapshot('A')).length;await applyMutation('A',mutation('late-edit',2,{...trip,title:'Recovered edit'}));assert.equal((await snapshot('A')).length,n)});
+await check('owner isolation for identical IDs and operations',async()=>{await applyMutation('B',mutation('create1',0,{...trip,title:'B only'}));assert.equal((await snapshot('B')).length,1);assert.equal((await snapshot('B'))[0].record.title,'B only');assert.equal((await snapshot('A')).some(r=>r.record.title==='B only'),false)});
+await check('validation rejects invalid dates, coordinates and duplicate items',()=>{for(const payload of [{...trip,location:{lat:91,lon:0}},{...trip,startDate:'2026-02-30'},{...trip,endDate:'2026-09-01'},{...trip,checklist:[trip.checklist[0],trip.checklist[0]]},{...trip,groupSize:0}])assert.throws(()=>mutation('bad',0,payload));assert.throws(()=>validateMutation({operationId:'bad',id:undefined,entity:'trip',baseRevision:0,payload:null}))});
+console.log(`${count} synchronization tests passed`);sql.close();

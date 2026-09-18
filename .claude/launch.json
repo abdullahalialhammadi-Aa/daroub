@@ -1,0 +1,33 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "daroub-dev",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev"
+      ],
+      "port": 5173
+    },
+    {
+      "name": "globe-prototypes",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "C:\\Users\\ADMINI~1\\AppData\\Local\\Temp\\claude\\C--Users-Administrator-fainel-projcet\\d2224b0f-91d8-44d9-9e4b-f81dd451fd49\\scratchpad\\globe-design\\serve.mjs"
+      ],
+      "port": 5180
+    },
+    {
+      "name": "daroub-dev-5174",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "scripts/run-framework.mjs",
+        "dev",
+        "--port",
+        "5174"
+      ],
+      "port": 5174
+    }
+  ]
+}

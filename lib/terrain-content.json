@@ -1,0 +1,147 @@
+{
+  "ar": {
+    "group": "خطّط لمشاركة شخصين على الأقل كتطبيق لمبدأ الرفيق، وليس ضمانًا للسلامة. تتطلب المسارات النائية أو الفنية تخطيط المجموعة مع خبير محلي. لا تسافر منفردًا.",
+    "terrains": [
+      {
+        "equipment": "احمل ماءً وغذاءً إضافيين وخريطة ومصباحًا ووسيلة استغاثة. ارتدِ ملابس طويلة خفيفة وقبعة وحذاءً مغلقًا، مع طبقة لبرودة الليل. استخدم مركبة ملائمة للطريق وسائقًا متمرسًا.",
+        "nature": "أمثلة توضيحية: السَّمُر والصبّار، والثعالب والعقارب. تتكيف الكائنات مع ندرة الماء وتسهم في توازن النظام البيئي. راقب من مسافة، واحمِ الغطاء النباتي؛ لا تجمع النباتات أو تتذوقها.",
+        "hazard": "عند الدوار، توقف في الظل وابدأ التبريد. الارتباك أو الانهيار يستدعي الطوارئ. ابتعد عن مجاري السيول، ولا تعبر مياهًا جارية. لدغة الثعبان تستدعي مساعدة طبية عاجلة.",
+        "deeper": "تتشكل الصحارى عندما يقل الهطول عن فقد الماء بالتبخر والنتح. تنقل الرياح الرمال، بينما تنحت السيول المفاجئة الأودية. تؤثر الصخور والارتفاع والموقع في شكل التضاريس والحرارة؛ ليست كل الصحارى رملية أو حارة دائمًا."
+      },
+      {
+        "equipment": "احمل خريطة ومصباحًا ومأوى طوارئ وماءً وغذاءً إضافيين. ارتدِ طبقات عازلة وواقيًا من المطر وحذاءً ثابتًا. تحقق من طريق الوصول والمركبة؛ المسارات الثلجية والفنية تتطلب تدريبًا وتجهيزًا متخصصين.",
+        "nature": "أمثلة توضيحية: العرعر والأعشاب الجبلية، والوعول والطيور الجارحة. تساعد النباتات على تثبيت التربة، وتدعم الحيوانات شبكات الغذاء. التزم بالمسار؛ راقب دون إطعام أو قطف أو تذوق.",
+        "hazard": "عند الرعد، غادر القمم وابحث عن مبنى متين أو مركبة مغلقة السقف؛ الخارج غير آمن تمامًا. عند إصابة خطيرة، اطلب الإنقاذ واحمِ المصاب من البرد.",
+        "deeper": "ترفع حركة الصفائح أجزاءً من القشرة لتشكل سلاسل جبلية. تعيد الأنهار والجليد والانهيارات تشكيل المنحدرات. يتغير الطقس مع الارتفاع والتعرض للرياح، وقد تختلف ظروف القمة كثيرًا عن نقطة الانطلاق."
+      },
+      {
+        "equipment": "احمل خريطة وماءً آمنًا ومصباحًا وواقيًا من المطر وإسعافات أولية. ارتدِ أكمامًا وسروالًا طويلين وحذاءً ثابتًا. استخدم طرق الوصول المسموحة، وتحقق من ملاءمة المركبة وحالة المسار.",
+        "nature": "أمثلة توضيحية: السرخس والبلوط، والأيائل ونقار الخشب. توفر الأشجار موائل وظلًا، وتدعم الحيوانات دورة المغذيات وشبكات الغذاء. استمتع بالملاحظة؛ لا تتذوق النباتات أو الفطر ولا تطعم الحيوانات.",
+        "hazard": "اغسل الجلد بالصابون وكثير من الماء بعد ملامسة نبات مهيج. صعوبة التنفس تستدعي الطوارئ. عند دخان أو حريق، غادر وفق تعليمات السلطات؛ لا تدخل المنطقة.",
+        "deeper": "تحتجز طبقات الغابة الضوء والرطوبة بدرجات مختلفة. تحلل الفطريات والكائنات الدقيقة المواد الميتة وتعيد المغذيات للتربة. تؤثر الأمطار والحرارة والحرائق في تجدد الغابة، بينما قد تخفي الأشجار تغيرات الطقس والمسار."
+      },
+      {
+        "equipment": "راجع الموج والرياح والمدّ. احمل ماءً وحماية شمس ووسيلة اتصال مقاومة للماء. ارتدِ ملابس مناسبة لحرارة الماء وسترة نجاة للنشاط البحري. اختر قاربًا صالحًا وربانًا مؤهلًا، واسبح قرب منقذ.",
+        "nature": "أمثلة توضيحية: الأعشاب البحرية والقرم، والسلاحف والأسماك. توفر النباتات موائل وتساعد في حماية السواحل. راقب دون لمس أو مطاردة؛ لا تجمع الكائنات أو النباتات ولا تتذوقها.",
+        "hazard": "إذا جرفك تيار، لا تقاومه مباشرة؛ اطفُ وأشر للمساعدة. عند لسعة بحرية، اخرج بأمان واطلب إرشاد المنقذ؛ العلاج يختلف حسب النوع. الأعراض الشديدة تستدعي الطوارئ.",
+        "deeper": "تنقل الأمواج والتيارات الرواسب فتغير شكل الشواطئ. يؤثر المدّ في عمق المياه والمساحات المكشوفة، وقد تنشأ تيارات ساحبة قرب الشاطئ. تتفاعل الجيولوجيا والرياح والعواصف والغطاء الساحلي لتشكيل بيئة متغيرة."
+      }
+    ]
+  },
+  "en": {
+    "group": "Plan for at least 2 people as a buddy practice, never a guarantee. Remote or technical routes require local expert group planning. Do not travel solo.",
+    "terrains": [
+      {
+        "equipment": "Carry extra water, food, navigation, a headlamp and emergency communication. Wear lightweight long clothing, a hat and closed footwear; pack a warm layer. Use a route-suitable vehicle with an experienced driver.",
+        "nature": "Illustrative examples include acacias, cacti, foxes and scorpions. Their adaptations support desert ecosystems. Observe from a distance and protect fragile vegetation; do not collect or eat plants.",
+        "hazard": "If dizzy, stop in shade and cool down. Confusion or collapse requires emergency help. Avoid flood channels and never cross flowing floodwater. Snakebite requires urgent medical attention.",
+        "deeper": "Deserts develop where precipitation is low relative to water loss through evaporation and transpiration. Wind transports sand, while flash floods carve channels. Geology, elevation and location shape conditions; deserts are not always sandy or hot."
+      },
+      {
+        "equipment": "Carry navigation, a headlamp, emergency shelter, extra water and food. Wear insulating layers, waterproof outerwear and sturdy footwear. Check vehicle access; snowy and technical routes require specialist equipment and training.",
+        "nature": "Illustrative examples include junipers, mountain grasses, ibex and birds of prey. Vegetation stabilizes soil and wildlife supports food webs. Stay on trails; observe without feeding, picking or tasting.",
+        "hazard": "At thunder, leave summits and seek a substantial building or enclosed hard-top vehicle; outdoors is not fully safe. For serious injury, call rescue and protect against cold.",
+        "deeper": "Plate movements uplift parts of Earth's crust into mountain ranges. Rivers, ice and landslides reshape slopes. Weather changes with elevation and wind exposure, so summit conditions can differ greatly from those at the starting point."
+      },
+      {
+        "equipment": "Carry navigation, safe drinking water, a headlamp, rain protection and first aid. Wear long sleeves, trousers and sturdy footwear. Use permitted access roads; check vehicle suitability and trail conditions.",
+        "nature": "Illustrative examples include ferns, oaks, deer and woodpeckers. Trees provide habitat and shade; wildlife supports nutrient cycles and food webs. Enjoy observing without tasting plants or fungi, or feeding animals.",
+        "hazard": "Wash skin with soap and plenty of water after irritating plant contact. Breathing difficulty requires emergency help. If smoke or fire appears, leave following official directions.",
+        "deeper": "Forest layers receive different amounts of light and moisture. Fungi and microorganisms break down dead material, returning nutrients to soil. Rainfall, temperature and fire influence regeneration; dense vegetation can conceal weather changes and trail junctions."
+      },
+      {
+        "equipment": "Check waves, wind and tides. Carry water, sun protection and waterproof communication. Dress for water temperature; wear an activity-suitable life jacket afloat. Choose a seaworthy boat and qualified operator; swim near lifeguards.",
+        "nature": "Illustrative examples include seagrasses, mangroves, turtles and fish. Vegetation provides habitat and helps protect shorelines. Observe without touching or chasing; do not collect or eat wild plants or animals.",
+        "hazard": "Caught in a rip current, avoid fighting directly against it; float and signal. After a marine sting, leave safely and seek lifeguard guidance. Severe symptoms require emergency help.",
+        "deeper": "Waves and currents move sediment and reshape beaches. Tides change water depth and exposed shore areas; rip currents can form close to beaches. Geology, winds, storms and coastal vegetation interact in this changing environment."
+      }
+    ]
+  },
+  "fr": {
+    "group": "Prévoyez au moins 2 personnes selon le principe du binôme, sans garantie de sécurité. Les itinéraires isolés ou techniques exigent une préparation du groupe avec un expert local. Ne partez pas seul.",
+    "terrains": [
+      {
+        "equipment": "Emportez eau, nourriture, carte, lampe et communication d’urgence. Portez des vêtements longs légers, un chapeau et des chaussures fermées; ajoutez une couche chaude. Choisissez un véhicule adapté et un conducteur expérimenté.",
+        "nature": "Exemples illustratifs : acacias, cactus, renards et scorpions. Leurs adaptations participent aux écosystèmes désertiques. Observez à distance et protégez la végétation fragile; ne cueillez ni ne goûtez les plantes.",
+        "hazard": "En cas de vertige, arrêtez-vous à l’ombre et rafraîchissez-vous. Confusion ou effondrement : appelez les secours. Évitez les crues. Une morsure de serpent nécessite des soins urgents.",
+        "deeper": "Les déserts se développent lorsque les précipitations sont faibles par rapport aux pertes d’eau par évaporation et transpiration. Le vent déplace le sable; les crues creusent les chenaux. Géologie, altitude et localisation modulent les conditions : tous les déserts ne sont pas chauds ou sableux."
+      },
+      {
+        "equipment": "Emportez carte, lampe, abri d’urgence, eau et nourriture supplémentaires. Portez des couches isolantes, une veste imperméable et des chaussures robustes. Vérifiez l’accès automobile; neige et passages techniques exigent formation et matériel adaptés.",
+        "nature": "Exemples illustratifs : genévriers, graminées montagnardes, bouquetins et rapaces. Les plantes stabilisent les sols; les animaux participent aux réseaux alimentaires. Restez sur les sentiers, sans nourrir, cueillir ni goûter.",
+        "hazard": "Au tonnerre, quittez les sommets; cherchez un bâtiment solide ou un véhicule fermé à toit rigide. Pour une blessure grave, appelez les secours et protégez du froid.",
+        "deeper": "Les mouvements des plaques soulèvent la croûte terrestre et forment des chaînes montagneuses. Rivières, glaciers et glissements remodèlent les pentes. L’altitude et l’exposition au vent influencent la météo; les conditions au sommet peuvent différer fortement de celles du départ."
+      },
+      {
+        "equipment": "Emportez carte, eau potable, lampe, protection contre la pluie et premiers secours. Portez manches longues, pantalon et chaussures robustes. Utilisez les routes autorisées; vérifiez leur état et l’adaptation du véhicule.",
+        "nature": "Exemples illustratifs : fougères, chênes, cerfs et pics. Les arbres offrent habitat et ombre; les animaux contribuent aux cycles nutritifs. Observez sans goûter plantes ou champignons, ni nourrir les animaux.",
+        "hazard": "Après contact avec une plante irritante, lavez abondamment à l’eau savonneuse. Une difficulté respiratoire exige les secours. En présence de fumée ou d’incendie, évacuez selon les consignes officielles.",
+        "deeper": "Les strates forestières reçoivent des quantités différentes de lumière et d’humidité. Champignons et microorganismes décomposent les matières mortes et restituent des nutriments au sol. Pluie, température et incendies influencent la régénération; la végétation dense peut masquer les changements météorologiques."
+      },
+      {
+        "equipment": "Vérifiez vagues, vent et marées. Emportez eau, protection solaire et communication étanche. Habillez-vous selon la température de l’eau; portez un gilet adapté en bateau. Choisissez bateau et pilote qualifiés; nagez près des sauveteurs.",
+        "nature": "Exemples illustratifs : herbiers marins, palétuviers, tortues et poissons. La végétation offre des habitats et protège les côtes. Observez sans toucher ni poursuivre; ne prélevez ni ne goûtez les organismes.",
+        "hazard": "Dans un courant d’arrachement, ne luttez pas directement : flottez et signalez-vous. Après une piqûre marine, sortez prudemment et consultez un sauveteur. Symptômes graves : appelez les secours.",
+        "deeper": "Vagues et courants déplacent les sédiments et remodèlent les plages. Les marées modifient profondeur et surfaces découvertes; des courants d’arrachement peuvent se former près du rivage. Géologie, vents, tempêtes et végétation côtière façonnent ensemble ce milieu changeant."
+      }
+    ]
+  },
+  "zh": {
+    "group": "按照结伴原则，计划至少2人同行，但人数并不保证安全。偏远或技术性路线需要与当地专家共同规划队伍。不要独自出行。",
+    "terrains": [
+      {
+        "equipment": "携带额外饮水、食物、地图、头灯和紧急通信设备。穿轻薄长衣、包脚鞋并戴帽，另备保暖层。选择适合路线的车辆，由有经验的驾驶员驾驶。",
+        "nature": "示例包括金合欢、仙人掌、狐狸和蝎子，并非各地均有。它们参与沙漠生态系统。远距离观察，保护脆弱植被，不采集或品尝植物。",
+        "hazard": "头晕时停止活动，到阴凉处降温。意识混乱或倒下时立即求救。避开洪水沟道，勿穿越流动洪水。蛇咬伤需要紧急医疗救助。",
+        "deeper": "当降水相对蒸发和植物蒸腾造成的水分损失较少时，可能形成沙漠。风搬运沙粒，突发洪水切割沟道。地质、海拔和位置共同影响环境；沙漠不一定多沙，也不总是炎热。"
+      },
+      {
+        "equipment": "携带地图、头灯、应急庇护装备和额外饮水食物。穿保暖分层衣物、防雨外套和稳固鞋。检查车辆通行条件；冰雪及技术性路线需要专门装备和训练。",
+        "nature": "示例包括杜松、山地草本、野山羊和猛禽，并非各地均有。植物稳定土壤，动物参与食物网。沿步道观察，不投喂、不采摘、不品尝。",
+        "hazard": "听到雷声时离开山顶，寻找坚固建筑或封闭硬顶车辆；户外没有完全安全的位置。严重受伤时联系救援，并保护伤者免受寒冷。",
+        "deeper": "板块运动使部分地壳抬升，形成山脉。河流、冰川和滑坡不断改变坡面。海拔与迎风程度影响天气，山顶条件可能与出发点相差很大。"
+      },
+      {
+        "equipment": "携带地图、安全饮水、头灯、雨具和急救用品。穿长袖、长裤及稳固鞋。仅使用允许通行的道路，检查车辆适用性和步道状况。",
+        "nature": "示例包括蕨类、栎树、鹿和啄木鸟，并非各地均有。树木提供栖息地和阴凉，动物参与养分循环。只观察，不品尝植物或真菌，不投喂动物。",
+        "hazard": "接触刺激性植物后，用肥皂和大量清水清洗皮肤。呼吸困难时立即求救。发现烟雾或火灾时，遵照官方指示撤离。",
+        "deeper": "森林不同层次获得的光照和水分不同。真菌与微生物分解枯死物，将养分归还土壤。降雨、温度和火灾影响森林更新；密集植被也可能遮挡天气变化和道路分岔。"
+      },
+      {
+        "equipment": "查看海浪、风和潮汐。携带饮水、防晒用品及防水通信设备。按水温选择衣物，乘船时穿适合活动的救生衣。选择适航船只及合格驾驶员，在救生员附近游泳。",
+        "nature": "示例包括海草、红树林、海龟和鱼类，并非各地均有。植被提供栖息地并帮助保护海岸。远观，不触摸、不追逐，也不采集或食用野生生物。",
+        "hazard": "遇到离岸流，不要直接逆流挣扎；漂浮并示意求救。被海洋生物蜇伤后安全离水，寻求救生员指导。严重症状需要紧急救助。",
+        "deeper": "海浪和水流搬运沉积物，改变海滩形状。潮汐改变水深和露出的岸滩，近岸可能形成离岸流。地质、风、风暴和海岸植被共同塑造不断变化的环境。"
+      }
+    ]
+  },
+  "hi": {
+    "group": "साथी व्यवस्था के लिए कम से कम 2 लोगों की योजना बनाएं; यह सुरक्षा की गारंटी नहीं है। दूरस्थ या तकनीकी मार्गों पर स्थानीय विशेषज्ञ के साथ समूह की योजना बनाएं। अकेले यात्रा न करें।",
+    "terrains": [
+      {
+        "equipment": "अतिरिक्त पानी, भोजन, नक्शा, टॉर्च और आपात संचार साधन रखें। हल्के लंबे कपड़े, टोपी और बंद जूते पहनें; गर्म परत रखें। मार्गानुकूल वाहन और अनुभवी चालक चुनें।",
+        "nature": "उदाहरण: बबूल, कैक्टस, लोमड़ी और बिच्छू; हर स्थान पर सभी नहीं मिलते। ये मरुस्थलीय पारिस्थितिकी का हिस्सा हैं। दूर से देखें, वनस्पति बचाएं; पौधे न तोड़ें, न चखें।",
+        "hazard": "चक्कर आने पर छाया में रुककर शरीर ठंडा करें। भ्रम या गिरने पर आपात सहायता बुलाएं। बाढ़ का बहता पानी पार न करें। सर्पदंश में तत्काल चिकित्सा लें।",
+        "deeper": "जहाँ वर्षा की तुलना में वाष्पीकरण और पौधों के वाष्पोत्सर्जन से अधिक पानी खोता है, वहाँ मरुस्थल बन सकते हैं। हवा रेत ले जाती है; अचानक बाढ़ नालों को काटती है। सभी मरुस्थल रेतीले या हमेशा गर्म नहीं होते।"
+      },
+      {
+        "equipment": "नक्शा, टॉर्च, आपात आश्रय, अतिरिक्त पानी और भोजन रखें। गर्म परतें, वर्षारोधी जैकेट और मजबूत जूते पहनें। वाहन पहुंच जांचें; बर्फीले या तकनीकी मार्गों हेतु विशेष उपकरण और प्रशिक्षण चाहिए।",
+        "nature": "उदाहरण: जुनिपर, पर्वतीय घास, आइबेक्स और शिकारी पक्षी; वितरण अलग होता है। पौधे मिट्टी स्थिर रखते हैं; जीव खाद्य जाल में योगदान देते हैं। रास्ते पर रहें; न खिलाएं, न चखें।",
+        "hazard": "गरज सुनकर चोटियों से हटें; मजबूत भवन या बंद कठोर छत वाले वाहन में आश्रय लें। गंभीर चोट पर बचाव सहायता बुलाएं और घायल को ठंड से बचाएं।",
+        "deeper": "प्लेटों की गति भू-पर्पटी को उठाकर पर्वत शृंखलाएं बनाती है। नदियां, हिमनद और भूस्खलन ढलानों को बदलते हैं। ऊंचाई और हवा का प्रभाव मौसम बदलते हैं; चोटी की परिस्थितियां प्रस्थान स्थल से बहुत अलग हो सकती हैं।"
+      },
+      {
+        "equipment": "नक्शा, सुरक्षित पेयजल, टॉर्च, वर्षा सुरक्षा और प्राथमिक उपचार सामग्री रखें। लंबी आस्तीन, पतलून और मजबूत जूते पहनें। अनुमत सड़कों पर चलें; वाहन की उपयुक्तता और रास्ते की स्थिति जांचें।",
+        "nature": "उदाहरण: फर्न, ओक, हिरण और कठफोड़वा; हर वन में सभी नहीं होते। पेड़ आवास और छाया देते हैं; जीव पोषक चक्र में सहायक हैं। पौधे या कवक न चखें; जीवों को न खिलाएं।",
+        "hazard": "जलनकारी पौधे छूने पर त्वचा साबुन और खूब पानी से धोएं। सांस की कठिनाई में आपात सहायता लें। धुआं या आग दिखने पर आधिकारिक निर्देशों अनुसार निकलें।",
+        "deeper": "वन की विभिन्न परतों को अलग मात्रा में प्रकाश और नमी मिलती है। कवक और सूक्ष्मजीव मृत पदार्थ विघटित करके पोषक तत्व मिट्टी में लौटाते हैं। वर्षा, तापमान और आग पुनर्जनन प्रभावित करते हैं; घनी वनस्पति रास्ते के मोड़ छिपा सकती है।"
+      },
+      {
+        "equipment": "लहरें, हवा और ज्वार जांचें। पानी, धूप से सुरक्षा और जलरोधी संचार रखें। जलताप अनुसार कपड़े और नौकायन में उपयुक्त जीवनरक्षक जैकेट पहनें। सुरक्षित नाव, योग्य चालक चुनें; जीवनरक्षक के पास तैरें।",
+        "nature": "उदाहरण: समुद्री घास, मैंग्रोव, कछुए और मछलियां; वितरण स्थानानुसार बदलता है। वनस्पति आवास देती और तट की रक्षा करती है। बिना छुए या पीछा किए देखें; जीव-पौधे न जुटाएं, न खाएं।",
+        "hazard": "रिप करंट में सीधे धारा से न लड़ें; तैरते रहें और सहायता संकेत दें। समुद्री डंक पर सुरक्षित बाहर आकर जीवनरक्षक की सलाह लें। गंभीर लक्षणों में आपात सहायता बुलाएं।",
+        "deeper": "लहरें और धाराएं तलछट ले जाकर समुद्रतट बदलती हैं। ज्वार पानी की गहराई और खुले तटीय हिस्से बदलता है; किनारे के पास रिप करंट बन सकते हैं। भूविज्ञान, हवा, तूफान और तटीय वनस्पति मिलकर इस बदलते पर्यावरण को आकार देते हैं।"
+      }
+    ]
+  }
+}

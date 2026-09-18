@@ -1,0 +1,55 @@
+// Run only against the local compiled Worker with its local D1 migrations applied.
+import assert from 'node:assert/strict';
+const base=process.env.DAROUB_TEST_ORIGIN??'http://127.0.0.1:8787';
+if(!['localhost','127.0.0.1'].includes(new URL(base).hostname))throw Error('Synthetic tests are restricted to localhost');
+const suffix=crypto.randomUUID(),owner='team-owner-'+suffix,member='team-member-'+suffix,outsider='team-outsider-'+suffix;let checks=0;
+async function api(path,user,body,extra={}){const response=await fetch(base+path,{method:body?'POST':'GET',headers:{...(user?{'oai-authenticated-user-id':user,'oai-authenticated-user-email':'qa@example.invalid','X-Daroub-Account':user}:{}),...(body?{'Content-Type':'application/json',Origin:base}:{}),...extra},...(body?{body:JSON.stringify(body)}:{})});const raw=await response.text();if(!response.headers.get('content-type')?.includes('json'))throw Error(path+' '+response.status+' '+raw.slice(0,300));return {status:response.status,body:JSON.parse(raw),headers:response.headers}}
+function status(response,expected){assert.equal(response.status,expected,JSON.stringify(response.body));checks++;return response.body}
+const trip={id:'team-trip-'+suffix,schemaVersion:2,title:'Synthetic group trip',destinationId:null,terrainId:'desert',location:{lat:23,lon:53},startDate:'',endDate:'',groupSize:3,transport:'PRIVATE_TRANSPORT',notes:'PRIVATE_NOTES',checklist:[{id:'tent',label:'Tent',kind:'equipment',category:'custom',done:false,requiredQuantity:3,assignedQuantity:0,packedQuantity:0},{id:'task',label:'Charge radio',kind:'task',category:'custom',done:false}],revision:0,updatedAt:new Date().toISOString()};
+async function putTrip(payload,revision){return status(await api('/api/sync',owner,{protocol:2,operationId:crypto.randomUUID(),entity:'trip',id:trip.id,baseRevision:revision,payload},{'X-Daroub-Protocol':'2'}),200)}
+status(await api('/api/team',null),401);status(await api('/api/team',owner,undefined,{'X-Daroub-Account':member}),409);await putTrip(trip,0);
+const privateRows=status(await api('/api/sync',member,undefined,{'X-Daroub-Protocol':'2'}),200);assert.ok(!JSON.stringify(privateRows).includes(trip.id));checks++;
+const preview=status(await api('/api/team?trip='+trip.id+'&preview=1',owner),200).preview;assert.equal(preview.sourceRevision,1);assert.ok(!JSON.stringify(preview).includes('PRIVATE_'));checks++;
+status(await api('/api/team?trip='+trip.id+'&preview=1',outsider),404);
+status(await api('/api/team',owner,{type:'create',tripId:trip.id,name:'Owner',expectedSourceRevision:0}),409);
+const creation=await Promise.all(['Owner','Concurrent owner'].map(name=>api('/api/team',owner,{type:'create',tripId:trip.id,name,expectedSourceRevision:1})));
+assert.deepEqual(creation.map(result=>result.status).sort(),[200,409]);checks++;
+let board=status(creation.find(result=>result.status===200),200).board;const roomId=board.id;
+const act=async(user,type,fields={})=>api('/api/team',user,{type,roomId,revision:board.revision,...fields});
+const get=async(user=owner)=>status(await api('/api/team?room='+roomId,user),200).board;
+status(await api('/api/team?room='+roomId,outsider),404);
+status(await api('/api/team',owner,{type:'invite',roomId,revision:board.revision,userId:owner}),400);
+status(await api('/api/team',owner,{type:'invite',roomId,revision:board.revision},{Origin:'https://untrusted.invalid'}),403);
+let invited=status(await act(owner,'invite'),200);board=invited.board;const firstToken=invited.inviteToken;assert.equal(firstToken.length,64);assert.ok(!JSON.stringify(board).includes(firstToken));checks++;
+status(await api('/api/team',null,{type:'join',roomId,token:firstToken,name:'Member'}),401);
+let memberBoard=status(await api('/api/team',member,{type:'join',roomId,token:firstToken,name:'Member'}),200).board;board=await get();const memberId=memberBoard.participants.find(p=>p.isYou).id;
+assert.equal(memberBoard.tripId,null);assert.ok(memberBoard.participants.every(p=>!('userId'in p)));checks++;
+assert.equal(status(await api('/api/team',outsider),200).boards.length,0);checks++;
+const ownerId=board.participants.find(p=>p.isOwner).id;
+board=status(await act(member,'rename-person',{participantId:memberId,name:'Renamed member'}),200).board;
+assert.equal(board.participants.find(p=>p.id===memberId).name,'Renamed member');checks++;
+status(await act(owner,'rename-person',{participantId:memberId,name:'Unauthorized rename'}),403);
+status(await act(outsider,'rename-person',{participantId:memberId,name:'Outsider rename'}),404);
+status(await act(member,'rename-person',{participantId:memberId,name:board.participants.find(p=>p.isOwner).name}),400);
+board=status(await act(owner,'add-person',{name:'Managed test name'}),200).board;
+const managedId=board.participants.find(p=>p.name==='Managed test name').id;
+board=status(await act(owner,'rename-person',{participantId:managedId,name:'Managed saved name'}),200).board;
+assert.equal((await get()).participants.find(p=>p.id===managedId).name,'Managed saved name');checks++;
+status(await act(member,'rename-person',{participantId:managedId,name:'Not mine'}),403);
+board=await get();
+status(await act(member,'allocate',{itemId:'tent',participantId:ownerId,quantity:1,packed:0}),403);
+board=status(await act(member,'allocate',{itemId:'tent',participantId:memberId,quantity:3,packed:2}),200).board;
+const concurrent=await Promise.all([act(owner,'add-person',{name:'Ahmed'}),act(member,'allocate',{itemId:'tent',participantId:memberId,quantity:3,packed:1})]);assert.deepEqual(concurrent.map(r=>r.status).sort(),[200,409]);checks++;board=await get();
+board=status(await act(owner,'allocate',{itemId:'tent',participantId:memberId,quantity:3,packed:2}),200).board;
+await putTrip({...trip,title:'Previewed title',checklist:[{...trip.checklist[0],requiredQuantity:2}]},1);const secondPreview=status(await api('/api/team?trip='+trip.id+'&preview=1',owner),200).preview;
+await putTrip({...trip,title:'Changed after preview',checklist:[{...trip.checklist[0],requiredQuantity:1}]},2);
+status(await act(owner,'refresh',{expectedSourceRevision:secondPreview.sourceRevision}),409);
+board=status(await act(owner,'refresh',{expectedSourceRevision:3}),200).board;assert.equal(board.items[0].required,1);assert.equal(board.allocations.find(a=>a.participantId===memberId).packed,2);assert.equal(board.allocations.find(a=>a.participantId===memberId).quantity,3);checks++;
+board=status(await act(owner,'revoke-invite'),200).board;status(await api('/api/team',outsider,{type:'join',roomId,token:firstToken,name:'Outsider'}),403);await get(member);
+invited=status(await act(owner,'invite'),200);board=invited.board;board=status(await act(owner,'remove-person',{participantId:memberId}),200).board;
+status(await api('/api/team?room='+roomId,member),404);status(await api('/api/team',member,{type:'join',roomId,token:invited.inviteToken,name:'Member again'}),403);
+assert.equal(board.inviteExpiresAt,null);assert.ok(!board.allocations.some(a=>a.participantId===memberId));checks++;
+status(await act(owner,'close'),200);status(await api('/api/team?room='+roomId,owner),404);
+const reopened=status(await api('/api/team',owner,{type:'create',tripId:trip.id,name:'Owner',expectedSourceRevision:3}),200).board;assert.notEqual(reopened.id,roomId);assert.equal(reopened.participants.length,1);checks++;
+const final=await api('/api/team?room='+reopened.id,owner);assert.equal(final.headers.get('Cache-Control'),'no-store');checks++;
+console.log(JSON.stringify({checks,passed:true,environment:'compiled local Worker + local D1'}));

@@ -1,0 +1,35 @@
+import { destinations, sources } from './destinations';
+import {enrichOriginalDestination,originalAdviceSources} from './destination-original-advice';
+import {originalRules} from './destination-original-rules';
+import {eastDestinations,eastSources,eastRules} from './destination-expansion-east';
+import {worldDestinations,worldSources,worldRules} from './destination-expansion-world';
+import { terrains, locales, words } from './terrain';
+import content from './terrain-content.json';
+import type { CatalogSnapshot, Localized, PackingRule, TerrainId } from './toolkit-types';
+
+const all:TerrainId[]=['desert','mountain','forest','coast'];
+const reason:Localized=['أساس عام للاستعداد في الطبيعة؛ عدّل الكمية وفق مدة الرحلة والظروف المحلية.','General outdoor preparation; adjust quantities to duration and local conditions.','Préparation générale en plein air ; adaptez les quantités à la durée et aux conditions locales.','一般户外准备；请按行程长短与当地条件调整数量。','सामान्य बाहरी तैयारी; अवधि और स्थानीय परिस्थितियों के अनुसार मात्रा बदलें।'];
+function rule(id:string,label:Localized,extra:Partial<PackingRule>={}):PackingRule{return{id,version:1,equipmentId:id,label,category:'essentials',terrainIds:all,activities:[],months:[],minDays:0,transport:[],baseQuantity:1,perPerson:false,reason,sourceIds:['essentials'],coverage:'terrain-example',destinationIds:[],...extra}}
+const rules: PackingRule[]=[
+ rule('navigation',['خريطة وبوصلة ووسيلة ملاحة','Map, compass and navigation','Carte, boussole et navigation','地图、指南针与导航设备','नक्शा, कम्पास और नेविगेशन']),
+ rule('water',['ماء آمن واحتياطي يناسب الرحلة','Drinking water and a trip-appropriate reserve','Eau potable et réserve adaptée au voyage','饮用水与适合行程的备用水','पीने का पानी और यात्रा के अनुसार अतिरिक्त भंडार'],{perPerson:true}),
+ rule('food',['طعام إضافي','Extra food','Nourriture supplémentaire','额外食物','अतिरिक्त भोजन'],{perPerson:true}),
+ rule('light',['مصباح وبطاريات إضافية','Headlamp and spare batteries','Lampe frontale et piles supplémentaires','头灯与备用电池','हेडलैंप और अतिरिक्त बैटरी'],{perPerson:true}),
+ rule('first-aid',['حقيبة إسعافات أولية','First-aid kit','Trousse de premiers secours','急救包','प्राथमिक चिकित्सा किट']),
+ rule('weather',['ملابس وحماية تناسب الطقس','Weather-appropriate layers and protection','Vêtements et protection adaptés à la météo','适应天气的衣物与防护','मौसम के अनुसार कपड़े और सुरक्षा'],{perPerson:true}),
+ rule('shelter',['مأوى طوارئ مناسب','Suitable emergency shelter','Abri de secours adapté','适用的应急庇护装备','उचित आपात आश्रय']),
+ rule('waste-bag',['كيس لإعادة النفايات','Waste carry-out bag','Sac pour rapporter les déchets','垃圾回收袋','कचरा वापस ले जाने का बैग'],{terrainIds:['forest'],sourceIds:['forest-rules']}),
+ rule('life-jacket',['سترة نجاة مناسبة للنشاط','Activity-suitable life jacket','Gilet de sauvetage adapté à l’activité','适合活动的救生衣','गतिविधि के अनुकूल जीवन जैकेट'],{terrainIds:['coast'],activities:['boating'],perPerson:true,sourceIds:['essentials']}),
+ rule('sleeping-bag',['كيس نوم مناسب للظروف','Weather-suitable sleeping bag','Sac de couchage adapté aux conditions','适合天气的睡袋','मौसम के अनुकूल स्लीपिंग बैग'],{activities:['camping'],perPerson:true,sourceIds:['nps-camping-bedding'],reason:['أضفت التخييم: نقطة بداية قابلة للتعديل لكل شخص؛ راجع ملاءمة كيس النوم للطقس والموسم.','Camping selected: an editable starting quantity per person; check suitability for the weather and season.','Camping choisi : quantité initiale modifiable par personne ; vérifiez la météo et la saison.','已选择露营：每人起始数量可调整，请核对天气和季节适用性。','कैंपिंग चुनी है: प्रति व्यक्ति शुरुआती मात्रा बदल सकते हैं; मौसम और ऋतु के अनुसार उपयुक्तता जाँचें.']}),
+ rule('sleeping-pad',['حصيرة نوم عازلة','Sleeping pad','Matelas de sol','睡垫','सोने की चटाई'],{activities:['camping'],perPerson:true,sourceIds:['nps-camping-bedding'],reason:['أضفت التخييم: حصيرة لكل شخص كنقطة بداية؛ عدّلها بحسب ترتيبات النوم.','Camping selected: one pad per person as a starting point; adjust to your sleeping arrangements.','Camping choisi : un matelas par personne pour commencer ; adaptez-le au couchage prévu.','已选择露营：以每人一张睡垫为起点，按住宿安排调整。','कैंपिंग चुनी है: शुरुआत में प्रति व्यक्ति एक चटाई; सोने की व्यवस्था के अनुसार बदलें।']}),
+ rule('camping-tent',['خيمة تناسب المجموعة','Tent suited to the group','Tente adaptée au groupe','适合团队的帐篷','समूह के अनुकूल तंबू'],{activities:['camping'],sourceIds:['nps-camping-bedding'],reason:['أضفت التخييم: خيمة واحدة مجرد نقطة بداية، وليست تقدير سعة؛ راجع مساحة الأشخاص والمعدات وعدّل العدد والحجم.','Camping selected: one tent is a starting entry, not a capacity estimate; check space for people and gear and adjust size and count.','Camping choisi : une tente est un point de départ, sans estimation de capacité ; adaptez taille et nombre aux personnes et au matériel.','已选择露营：一顶仅为起始条目，并非容量估计；请按人数和装备调整尺寸与数量。','कैंपिंग चुनी है: एक तंबू शुरुआती सुझाव है, क्षमता का अनुमान नहीं; लोगों और सामान के अनुसार आकार व संख्या बदलें।']}),
+];
+const timezones=['Asia/Dubai','Asia/Muscat','Europe/Berlin','Africa/Cairo'];
+/** Immutable compiled baseline. Readers pass a complete snapshot; publication never mutates it. */
+export const seedCatalog:CatalogSnapshot={schemaVersion:1,revision:0,publishedAt:'2026-09-17T00:00:00.000Z',destinations:[...structuredClone(destinations).map((d,i)=>enrichOriginalDestination({...d,timezone:timezones[i],archived:false})),...eastDestinations,...worldDestinations],sources:[...structuredClone(sources),...originalAdviceSources,...eastSources,...worldSources],terrainGuidance:terrains.map((terrain,index)=>({terrainId:terrain.id as TerrainId,sections:(['deeper','equipment','nature','hazard'] as const).map(key=>({id:key,title:words[key==='hazard'?'warning':key] as Localized,body:locales.map(locale=>content[locale].terrains[index][key]) as Localized,sourceIds:key==='equipment'?['essentials']:key==='hazard'?[index===3?'beach-safety':index===1?'mountain-safety':'wildlife-safety']:[]})),clothing:locales.map(locale=>content[locale].terrains[index].equipment) as Localized,transport:locales.map(locale=>content[locale].terrains[index].equipment) as Localized,group:words.groupNote as Localized})),packingRules:[...rules,...originalRules,...eastRules,...worldRules]};
+seedCatalog.sources.push({id:'nps-camping-bedding',title:'National Park Service · Camping: shelter and bedding',url:'https://www.nps.gov/subjects/camping/what-to-bring.htm',reviewedAt:'2026-09-17'});
+export function catalogDestination(catalog:CatalogSnapshot,id:string|null|undefined){return catalog.destinations.find(d=>d.id===id)}
+export function activeDestinations(catalog:CatalogSnapshot){return catalog.destinations.filter(d=>!d.archived)}
+export function catalogForTerrain(catalog:CatalogSnapshot,index:number){const original=['liwa','jebel-shams','black-forest','hurghada'][index];return activeDestinations(catalog).find(d=>d.id===original&&d.terrainId===all[index])??activeDestinations(catalog).find(d=>d.terrainId===all[index])}
+export function catalogSources(catalog:CatalogSnapshot,ids:string[]){return catalog.sources.filter(source=>ids.includes(source.id))}
+export function catalogGuidance(catalog:CatalogSnapshot,terrainId:TerrainId){return catalog.terrainGuidance.find(g=>g.terrainId===terrainId)!}

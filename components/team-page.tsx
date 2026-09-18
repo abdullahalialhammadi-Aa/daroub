@@ -1,0 +1,34 @@
+'use client';
+import {useCallback,useEffect,useId,useRef,useState} from 'react';
+import {Users,ArrowLeft,ArrowRight,RefreshCw,Search,Plus} from 'lucide-react';
+import {useSite} from './site-shell';
+import {TeamBoardRoom} from './team-board';
+import {teamClient,teamError,readInvitation} from '@/lib/team-client';
+import {teamText} from '@/lib/team-copy';
+import type {TeamBoardSummary} from '@/lib/team-types';
+import './team-board.css';
+
+export function selectTeamBoards(boards:TeamBoardSummary[],query:string,role:'all'|'owner'|'member'){
+ const text=query.normalize('NFKC').trim().toLocaleLowerCase();
+ return boards.filter(board=>(role==='all'||board.isOwner===(role==='owner'))&&board.title.normalize('NFKC').toLocaleLowerCase().includes(text)).sort((a,b)=>Date.parse(b.updatedAt)-Date.parse(a.updatedAt));
+}
+export function TeamPage(){
+ const {locale}=useSite(),id=useId(),t=(key:string)=>teamText(locale,key),[context,setContext]=useState<{roomId:string;token:string}|null>(null),[boards,setBoards]=useState<TeamBoardSummary[]>([]),[loading,setLoading]=useState(true),[status,setStatus]=useState(''),[online,setOnline]=useState(true),[query,setQuery]=useState(''),[role,setRole]=useState<'all'|'owner'|'member'>('all'),alive=useRef(false),epoch=useRef(0),request=useRef(0),owner=useRef<string|null>(null);
+ const refresh=useCallback(async()=>{const generation=epoch.current,sequence=++request.current;try{const {data,session}=await teamClient.get();if(!alive.current||generation!==epoch.current||sequence!==request.current)return;if(owner.current&&owner.current!==session.userId){setBoards([]);owner.current=null;setStatus('account_changed');return}owner.current=session.userId;setBoards(data.boards??[]);setStatus('')}catch(error){if(alive.current&&generation===epoch.current&&sequence===request.current){const code=teamError(error);setStatus(code);if(code==='unauthorized'||code==='account_changed')setBoards([])}}finally{if(alive.current&&generation===epoch.current)setLoading(false)}},[]);
+ // URL and online state are hydrated only in the browser; group records never enter local storage.
+ useEffect(()=>{alive.current=true;const hydrate=()=>{const next=readInvitation(location.search,location.hash);setContext(next);if(!next.roomId)void refresh();else setLoading(false)};queueMicrotask(()=>{if(alive.current){hydrate();setOnline(navigator.onLine)}});
+  const invalidate=()=>{epoch.current++},visible=()=>{if(!new URLSearchParams(location.search).get('room')&&document.visibilityState==='visible'&&navigator.onLine)void refresh()},network=()=>{setOnline(navigator.onLine);if(!navigator.onLine)setStatus('offline');else visible()},account=(event:StorageEvent)=>{if(event.key===null||['daroub-account-generation','daroub-offline-account'].includes(event.key)){epoch.current++;owner.current=null;setBoards([]);setStatus('account_changed');visible()}};
+  const interval=setInterval(visible,15000);addEventListener('hashchange',hydrate);addEventListener('popstate',hydrate);addEventListener('online',network);addEventListener('offline',network);addEventListener('storage',account);document.addEventListener('visibilitychange',visible);
+  return()=>{alive.current=false;invalidate();clearInterval(interval);removeEventListener('hashchange',hydrate);removeEventListener('popstate',hydrate);removeEventListener('online',network);removeEventListener('offline',network);removeEventListener('storage',account);document.removeEventListener('visibilitychange',visible)};
+ },[refresh]);
+ const shown=selectTeamBoards(boards,query,role),n=(value:number)=>new Intl.NumberFormat(locale).format(value);
+ return <main id="main" className="page inner-page team-page" dir={locale==='ar'?'rtl':'ltr'}>
+  <div className="team-page-heading"><div><span className="eyebrow">DAROUB</span><h1><Users size={30} aria-hidden="true"/>{t('boards')}</h1><p>{t('intro')}</p></div><div className="team-actions">{context?.roomId?<a className="team-button" href="/team"><ArrowLeft size={17} aria-hidden="true"/>{t('allTeams')}</a>:<a className="team-button team-primary" href="/trips"><Plus size={17} aria-hidden="true"/>{t('startFromTrip')}</a>}<a className="team-button" href="/trips">{t('trips')}</a></div></div>
+  {context?.roomId?<TeamBoardRoom roomId={context.roomId} token={context.token} locale={locale}/>:<section className="team-board team-directory" aria-labelledby={id+'-list'}>
+   <div className="team-heading"><div><h2 id={id+'-list'}>{t('yourTeams')}</h2><p>{t('chooseTeam')}</p></div><button type="button" className="team-button" disabled={loading||!online} onClick={()=>void refresh()}><RefreshCw size={16} aria-hidden="true"/>{t('refresh')}</button></div>
+   {loading&&<p role="status">{t('loading')}</p>}<p className="team-status" role="status">{status?t(status):''}</p>
+   {status==='unauthorized'||status==='account_changed'?<div className="team-empty"><p>{t('signIn')}</p><a className="team-button team-primary" href="/login?return_to=%2Fteam">{t('signInAction')}</a></div>:!loading&&!boards.length&&!status?<div className="team-directory-empty"><Users size={42} aria-hidden="true"/><h3>{t('startTeam')}</h3><p>{t('noBoards')}</p><ol className="team-start-steps"><li>{t('startStepTrip')}</li><li>{t('startStepShare')}</li><li>{t('startStepPack')}</li></ol><a className="team-button team-primary" href="/trips">{t('startFromTrip')}<ArrowRight size={17} aria-hidden="true"/></a><p className="team-muted">{t('joinExisting')}</p></div>:null}
+   {boards.length>0&&<><div className="team-directory-controls"><label className="team-search" htmlFor={id+'-search'}><Search size={18} aria-hidden="true"/><span className="team-sr">{t('searchTeams')}</span><input id={id+'-search'} type="search" value={query} placeholder={t('searchTeams')} onChange={event=>setQuery(event.target.value)}/></label><div className="team-filters" role="group" aria-label={t('filterTeams')}>{(['all','owner','member'] as const).map(value=><button className="team-button" type="button" key={value} aria-pressed={role===value} onClick={()=>setRole(value)}>{t(value==='all'?'allTeams':value==='owner'?'ownedTeams':'joinedTeams')}</button>)}</div></div><p className="team-filter-result" role="status">{n(shown.length)} {t('teamsFound')}</p><ul className="team-board-list">{shown.map(board=><li key={board.id}><a href={'/team?room='+encodeURIComponent(board.id)}><span className="team-badge">{t(board.isOwner?'owner':'member')}</span><h3>{board.title}</h3><span>{t('updated')}: <time dateTime={board.updatedAt}>{new Intl.DateTimeFormat(locale,{dateStyle:'medium'}).format(new Date(board.updatedAt))}</time></span><strong className="team-card-action">{t('openPreparation')}<ArrowRight size={17} aria-hidden="true"/></strong></a></li>)}</ul>{!shown.length&&<div className="team-empty"><p>{t('noMatchingTeams')}</p><button className="team-button" type="button" onClick={()=>{setQuery('');setRole('all')}}>{t('clearFilters')}</button></div>}</>}
+  </section>}
+ </main>
+}

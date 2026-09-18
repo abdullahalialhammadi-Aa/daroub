@@ -1,0 +1,488 @@
+{
+  "liwa": {
+    "ar": {
+      "url": "/fieldbooks/liwa-ar.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "en": {
+      "url": "/fieldbooks/liwa-en.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "fr": {
+      "url": "/fieldbooks/liwa-fr.pdf",
+      "pages": 6,
+      "publishedAt": "2026-09-17"
+    },
+    "zh": {
+      "url": "/fieldbooks/liwa-zh.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "hi": {
+      "url": "/fieldbooks/liwa-hi.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    }
+  },
+  "jebel-shams": {
+    "ar": {
+      "url": "/fieldbooks/jebel-shams-ar.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "en": {
+      "url": "/fieldbooks/jebel-shams-en.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "fr": {
+      "url": "/fieldbooks/jebel-shams-fr.pdf",
+      "pages": 6,
+      "publishedAt": "2026-09-17"
+    },
+    "zh": {
+      "url": "/fieldbooks/jebel-shams-zh.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "hi": {
+      "url": "/fieldbooks/jebel-shams-hi.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    }
+  },
+  "black-forest": {
+    "ar": {
+      "url": "/fieldbooks/black-forest-ar.pdf",
+      "pages": 6,
+      "publishedAt": "2026-09-17"
+    },
+    "en": {
+      "url": "/fieldbooks/black-forest-en.pdf",
+      "pages": 6,
+      "publishedAt": "2026-09-17"
+    },
+    "fr": {
+      "url": "/fieldbooks/black-forest-fr.pdf",
+      "pages": 6,
+      "publishedAt": "2026-09-17"
+    },
+    "zh": {
+      "url": "/fieldbooks/black-forest-zh.pdf",
+      "pages": 6,
+      "publishedAt": "2026-09-17"
+    },
+    "hi": {
+      "url": "/fieldbooks/black-forest-hi.pdf",
+      "pages": 6,
+      "publishedAt": "2026-09-17"
+    }
+  },
+  "hurghada": {
+    "ar": {
+      "url": "/fieldbooks/hurghada-ar.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "en": {
+      "url": "/fieldbooks/hurghada-en.pdf",
+      "pages": 6,
+      "publishedAt": "2026-09-17"
+    },
+    "fr": {
+      "url": "/fieldbooks/hurghada-fr.pdf",
+      "pages": 6,
+      "publishedAt": "2026-09-17"
+    },
+    "zh": {
+      "url": "/fieldbooks/hurghada-zh.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "hi": {
+      "url": "/fieldbooks/hurghada-hi.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    }
+  },
+  "wadi-rum": {
+    "ar": {
+      "url": "/fieldbooks/wadi-rum-ar.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "en": {
+      "url": "/fieldbooks/wadi-rum-en.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "fr": {
+      "url": "/fieldbooks/wadi-rum-fr.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "zh": {
+      "url": "/fieldbooks/wadi-rum-zh.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "hi": {
+      "url": "/fieldbooks/wadi-rum-hi.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    }
+  },
+  "alula": {
+    "ar": {
+      "url": "/fieldbooks/alula-ar.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "en": {
+      "url": "/fieldbooks/alula-en.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "fr": {
+      "url": "/fieldbooks/alula-fr.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "zh": {
+      "url": "/fieldbooks/alula-zh.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "hi": {
+      "url": "/fieldbooks/alula-hi.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    }
+  },
+  "jebel-jais": {
+    "ar": {
+      "url": "/fieldbooks/jebel-jais-ar.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "en": {
+      "url": "/fieldbooks/jebel-jais-en.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "fr": {
+      "url": "/fieldbooks/jebel-jais-fr.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "zh": {
+      "url": "/fieldbooks/jebel-jais-zh.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "hi": {
+      "url": "/fieldbooks/jebel-jais-hi.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    }
+  },
+  "wadi-shab": {
+    "ar": {
+      "url": "/fieldbooks/wadi-shab-ar.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "en": {
+      "url": "/fieldbooks/wadi-shab-en.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "fr": {
+      "url": "/fieldbooks/wadi-shab-fr.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "zh": {
+      "url": "/fieldbooks/wadi-shab-zh.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "hi": {
+      "url": "/fieldbooks/wadi-shab-hi.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    }
+  },
+  "jubail-mangrove": {
+    "ar": {
+      "url": "/fieldbooks/jubail-mangrove-ar.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "en": {
+      "url": "/fieldbooks/jubail-mangrove-en.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "fr": {
+      "url": "/fieldbooks/jubail-mangrove-fr.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "zh": {
+      "url": "/fieldbooks/jubail-mangrove-zh.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "hi": {
+      "url": "/fieldbooks/jubail-mangrove-hi.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    }
+  },
+  "plitvice-lakes": {
+    "ar": {
+      "url": "/fieldbooks/plitvice-lakes-ar.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "en": {
+      "url": "/fieldbooks/plitvice-lakes-en.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "fr": {
+      "url": "/fieldbooks/plitvice-lakes-fr.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "zh": {
+      "url": "/fieldbooks/plitvice-lakes-zh.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "hi": {
+      "url": "/fieldbooks/plitvice-lakes-hi.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    }
+  },
+  "everglades": {
+    "ar": {
+      "url": "/fieldbooks/everglades-ar.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "en": {
+      "url": "/fieldbooks/everglades-en.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "fr": {
+      "url": "/fieldbooks/everglades-fr.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "zh": {
+      "url": "/fieldbooks/everglades-zh.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "hi": {
+      "url": "/fieldbooks/everglades-hi.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    }
+  },
+  "yellowstone": {
+    "ar": {
+      "url": "/fieldbooks/yellowstone-ar.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "en": {
+      "url": "/fieldbooks/yellowstone-en.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "fr": {
+      "url": "/fieldbooks/yellowstone-fr.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "zh": {
+      "url": "/fieldbooks/yellowstone-zh.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "hi": {
+      "url": "/fieldbooks/yellowstone-hi.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    }
+  },
+  "skaftafell": {
+    "ar": {
+      "url": "/fieldbooks/skaftafell-ar.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "en": {
+      "url": "/fieldbooks/skaftafell-en.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "fr": {
+      "url": "/fieldbooks/skaftafell-fr.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "zh": {
+      "url": "/fieldbooks/skaftafell-zh.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "hi": {
+      "url": "/fieldbooks/skaftafell-hi.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    }
+  },
+  "bromo": {
+    "ar": {
+      "url": "/fieldbooks/bromo-ar.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "en": {
+      "url": "/fieldbooks/bromo-en.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "fr": {
+      "url": "/fieldbooks/bromo-fr.pdf",
+      "pages": 5,
+      "publishedAt": "2026-09-17"
+    },
+    "zh": {
+      "url": "/fieldbooks/bromo-zh.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "hi": {
+      "url": "/fieldbooks/bromo-hi.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    }
+  },
+  "terrain-desert": {
+    "ar": {
+      "url": "/fieldbooks/terrain-desert-ar.pdf",
+      "pages": 3,
+      "publishedAt": "2026-09-17"
+    },
+    "en": {
+      "url": "/fieldbooks/terrain-desert-en.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "fr": {
+      "url": "/fieldbooks/terrain-desert-fr.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "zh": {
+      "url": "/fieldbooks/terrain-desert-zh.pdf",
+      "pages": 3,
+      "publishedAt": "2026-09-17"
+    },
+    "hi": {
+      "url": "/fieldbooks/terrain-desert-hi.pdf",
+      "pages": 3,
+      "publishedAt": "2026-09-17"
+    }
+  },
+  "terrain-mountain": {
+    "ar": {
+      "url": "/fieldbooks/terrain-mountain-ar.pdf",
+      "pages": 3,
+      "publishedAt": "2026-09-17"
+    },
+    "en": {
+      "url": "/fieldbooks/terrain-mountain-en.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "fr": {
+      "url": "/fieldbooks/terrain-mountain-fr.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "zh": {
+      "url": "/fieldbooks/terrain-mountain-zh.pdf",
+      "pages": 3,
+      "publishedAt": "2026-09-17"
+    },
+    "hi": {
+      "url": "/fieldbooks/terrain-mountain-hi.pdf",
+      "pages": 3,
+      "publishedAt": "2026-09-17"
+    }
+  },
+  "terrain-forest": {
+    "ar": {
+      "url": "/fieldbooks/terrain-forest-ar.pdf",
+      "pages": 3,
+      "publishedAt": "2026-09-17"
+    },
+    "en": {
+      "url": "/fieldbooks/terrain-forest-en.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "fr": {
+      "url": "/fieldbooks/terrain-forest-fr.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "zh": {
+      "url": "/fieldbooks/terrain-forest-zh.pdf",
+      "pages": 3,
+      "publishedAt": "2026-09-17"
+    },
+    "hi": {
+      "url": "/fieldbooks/terrain-forest-hi.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    }
+  },
+  "terrain-coast": {
+    "ar": {
+      "url": "/fieldbooks/terrain-coast-ar.pdf",
+      "pages": 3,
+      "publishedAt": "2026-09-17"
+    },
+    "en": {
+      "url": "/fieldbooks/terrain-coast-en.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "fr": {
+      "url": "/fieldbooks/terrain-coast-fr.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    },
+    "zh": {
+      "url": "/fieldbooks/terrain-coast-zh.pdf",
+      "pages": 3,
+      "publishedAt": "2026-09-17"
+    },
+    "hi": {
+      "url": "/fieldbooks/terrain-coast-hi.pdf",
+      "pages": 4,
+      "publishedAt": "2026-09-17"
+    }
+  }
+}
