@@ -145,20 +145,36 @@ export function GlobeSurface({selection,onChoose,locked,viewReset}:{selection:Ex
 
       const ray=new THREE.Raycaster();
       let dragging=false,startX=0,startY=0,lastX=0,lastY=0,moved=0,activePointer:number|null=null;
+      // Markers are picked in screen space: the nearest visible marker within a finger-sized radius wins, so neighbouring places
+      // (a dozen UAE points fit inside a few pixels at globe scale) never share one hit box or shadow each other.
+      const worldPoint=new THREE.Vector3(),toCamera=new THREE.Vector3();
+      const nearestMarker=(x:number,y:number,rect:DOMRect,hitRadius=Math.max(14,Math.min(rect.width,rect.height)*0.03))=>{
+        scene.updateMatrixWorld(true);camera3.updateMatrixWorld(true);
+        let best=-1,bestDistance=Infinity;
+        for(let i=0;i<markers.length;i++){
+          markers[i].getWorldPosition(worldPoint);
+          // The far hemisphere is hidden by the globe itself.
+          if(toCamera.copy(camera3.position).sub(worldPoint).dot(worldPoint)<=0)continue;
+          worldPoint.project(camera3);
+          const sx=rect.left+(worldPoint.x+1)/2*rect.width,sy=rect.top+(1-worldPoint.y)/2*rect.height;
+          const distance=Math.hypot(sx-x,sy-y);
+          if(distance<bestDistance){bestDistance=distance;best=i;}
+        }
+        return bestDistance<=hitRadius?best:-1;
+      };
       const pick=(x:number,y:number)=>{
         if(!contextAvailable)return;
         pauseRotation();
         const rect=renderer.domElement.getBoundingClientRect();
         if(!rect.width||!rect.height)return;
-        // Update matrices before picking so keyboard/camera rotation is not one frame behind.
-        scene.updateMatrixWorld(true);camera3.updateMatrixWorld(true);
-        ray.setFromCamera(new THREE.Vector2((x-rect.left)/rect.width*2-1,-(y-rect.top)/rect.height*2+1),camera3);
-        const dotHit=ray.intersectObjects(markers)[0],earthHit=ray.intersectObject(earth,false)[0];
-        if(dotHit&&(!earthHit||dotHit.distance<=earthHit.distance+1e-4)){
-          const destination=destinations[markers.findIndex(marker=>marker===dotHit.object)];
+        const nearest=nearestMarker(x,y,rect);
+        if(nearest>=0){
+          const destination=destinations[nearest];
           if(destination)onSelect.current({destinationId:destination.id,terrainId:destination.terrainId,lat:destination.lat,lon:destination.lon});
           return;
         }
+        ray.setFromCamera(new THREE.Vector2((x-rect.left)/rect.width*2-1,-(y-rect.top)/rect.height*2+1),camera3);
+        const earthHit=ray.intersectObject(earth,false)[0];
         if(!earthHit)return;
         const point=earth.worldToLocal(earthHit.point.clone()).normalize();
         onSelect.current({destinationId:null,terrainId:currentSelection.current.terrainId,lat:Math.round(Math.asin(Math.max(-1,Math.min(1,point.y)))*180/Math.PI*1000)/1000,lon:Math.round(-Math.atan2(point.z,point.x)*180/Math.PI*1000)/1000});
@@ -179,7 +195,11 @@ export function GlobeSurface({selection,onChoose,locked,viewReset}:{selection:Ex
         container.setPointerCapture(event.pointerId);
       };
       const move=(event:PointerEvent)=>{
-        if(!dragging||event.pointerId!==activePointer)return;
+        if(!dragging||event.pointerId!==activePointer){
+          // Hovering a marker shows it is a target; the check is a dozen projections, cheap enough per move.
+          if(!dragging&&contextAvailable&&event.pointerType==='mouse'){const rect=renderer.domElement.getBoundingClientRect();container.style.cursor=rect.width&&nearestMarker(event.clientX,event.clientY,rect)>=0?'pointer':'';}
+          return;
+        }
         moved=Math.max(moved,Math.hypot(event.clientX-startX,event.clientY-startY));
         rotate((event.clientX-lastX)*.006,(event.clientY-lastY)*.006);lastX=event.clientX;lastY=event.clientY;
       };

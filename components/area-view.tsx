@@ -22,7 +22,7 @@ const DRAG_THRESHOLD=5,SCENE_ZOOM=15,SCENE_TILT='rotateX(52deg) scale(1.9) ';
 export function AreaView({lat,lon,label,terrainId,species,destinations,selectedId,onPick,onPickDestination,onTopic}:{lat:number;lon:number;label:string;terrainId:TerrainId;species:SpeciesEntry[];destinations:Destination[];selectedId:string|null;onPick:(point:{lat:number;lon:number})=>void;onPickDestination:(destination:Destination)=>void;onTopic?:(topic:SceneTopic,text:string)=>void}){
  const {locale,tr}=useSite(),g=(key:string)=>globeText(locale,key);
  const [remote,setRemote]=useState<AreaLayer[]>([]),[chosen,setChosen]=useState<AreaLayerId|null>(null),[zoom,setZoom]=useState(AREA_DEFAULT_ZOOM),[size,setSize]=useState({w:0,h:0});
- const [failed,setFailed]=useState<Set<string>>(()=>new Set()),[copyright,setCopyright]=useState(''),[pan,setPan]=useState({dx:0,dy:0,active:false}),[sceneChoice,setSceneChoice]=useState<boolean|null>(null);
+ const [failed,setFailed]=useState<Set<string>>(()=>new Set()),[copyright,setCopyright]=useState(''),[pan,setPan]=useState({dx:0,dy:0,active:false}),[sceneChoice,setSceneChoice]=useState<boolean|null>(null),[settling,setSettling]=useState(false);
  const host=useRef<HTMLDivElement>(null),wheelAt=useRef(0),drag=useRef<{id:number;x:number;y:number;dx:number;dy:number;moved:boolean}|null>(null),skipClick=useRef(false);
  const layers=useMemo(()=>[...remote,...builtinAreaLayers],[remote]);
  // The operator's paid provider is the default view when its key works; otherwise the key-free imagery.
@@ -53,10 +53,13 @@ export function AreaView({lat,lon,label,terrainId,species,destinations,selectedI
  // Drag to pan: the pane follows the pointer; on release the place under the centre becomes the new focus point.
  const onPointerDown=(event:React.PointerEvent<HTMLDivElement>)=>{if(event.button!==0||(event.target as HTMLElement).closest('button'))return;drag.current={id:event.pointerId,x:event.clientX,y:event.clientY,dx:0,dy:0,moved:false};event.currentTarget.setPointerCapture(event.pointerId);};
  const onPointerMove=(event:React.PointerEvent<HTMLDivElement>)=>{const d=drag.current;if(!d||d.id!==event.pointerId)return;d.dx=event.clientX-d.x;d.dy=event.clientY-d.y;if(!d.moved&&Math.hypot(d.dx,d.dy)<DRAG_THRESHOLD)return;d.moved=true;setPan({dx:d.dx,dy:d.dy,active:true});};
- const endDrag=(event:React.PointerEvent<HTMLDivElement>)=>{const d=drag.current;if(!d||d.id!==event.pointerId)return;drag.current=null;if(event.currentTarget.hasPointerCapture(event.pointerId))event.currentTarget.releasePointerCapture(event.pointerId);if(!d.moved)return;skipClick.current=true;setPan({dx:0,dy:0,active:false});onPick(placeAtOffset({lat,lon},z,-d.dx,-d.dy));};
+ const endDrag=(event:React.PointerEvent<HTMLDivElement>)=>{const d=drag.current;if(!d||d.id!==event.pointerId)return;drag.current=null;if(event.currentTarget.hasPointerCapture(event.pointerId))event.currentTarget.releasePointerCapture(event.pointerId);if(!d.moved)return;skipClick.current=true;setSettling(true);setPan({dx:0,dy:0,active:false});onPick(placeAtOffset({lat,lon},z,-d.dx,-d.dy));};
+ // The pane's transform transition is for the tilt toggle only: after a drag the tiles are re-laid for the new centre in the same frame the
+ // transform resets, so a transition here would slide the whole map back over half a second.
+ useEffect(()=>{if(!settling)return;const timer=setTimeout(()=>setSettling(false),80);return()=>clearTimeout(timer);},[settling]);
  const paneStyle=pan.active?{transform:`${sceneOn?SCENE_TILT:''}translate(${pan.dx/(sceneOn?1.9:1)}px,${pan.dy/(sceneOn?1.9:1)}px)`}:undefined;
  return <>
-  <div ref={host} className={'gc-area'+(pan.active?' gc-dragging':'')+(sceneOn?' gc-scene':'')} role="group" tabIndex={-1} aria-label={label} title={g('dragHint')}
+  <div ref={host} className={'gc-area'+(pan.active?' gc-dragging':'')+(settling?' gc-settling':'')+(sceneOn?' gc-scene':'')} role="group" tabIndex={-1} aria-label={label} title={g('dragHint')}
    onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={endDrag} onPointerCancel={endDrag}
    onClick={event=>{if(skipClick.current){skipClick.current=false;return;}if((event.target as HTMLElement).closest('button'))return;const rect=event.currentTarget.getBoundingClientRect();onPick(placeAtOffset({lat,lon},z,event.clientX-rect.left-rect.width/2,event.clientY-rect.top-rect.height/2));}}
    onWheel={event=>{if(event.deltaY===0)return;const now=Date.now();if(now-wheelAt.current<220)return;wheelAt.current=now;step(event.deltaY<0?1:-1);}}>

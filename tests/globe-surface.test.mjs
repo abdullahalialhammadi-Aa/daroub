@@ -150,20 +150,24 @@ test('XYZ focus centres actual THREE matrices at latitude 45, both poles and the
   }finally{h.cleanup()}
 });
 
-test('a marker hit behind the Earth surface cannot override the visible coordinate hit',async()=>{
+test('markers on the far side never win, visible markers are picked within a finger-sized radius',async()=>{
   const h=harness();try{
-    await flush();h.render();h.setCatalog({destinations:[{id:'occluded',terrainId:'desert',lat:0,lon:-40}]});
-    h.setSelection({destinationId:'occluded',terrainId:'desert',lat:0,lon:-40});h.step();
+    await flush();h.render();h.setCatalog({destinations:[{id:'behind',terrainId:'desert',lat:0,lon:160},{id:'front',terrainId:'desert',lat:0,lon:-40}]});
+    h.setSelection({destinationId:null,terrainId:'desert',lat:0,lon:0});h.step();
     const renderer=h.renderers[0],earth=renderer.scene.children.find(node=>node.isMesh&&node.material.isMeshPhongMaterial);
-    // This is a user-rotated view. The selected dot slightly intersects the sphere;
-    // its hidden edge is 0.01566 units behind the Earth at this visible pixel.
     earth.rotation.set(0,0,0);earth.updateMatrixWorld(true);renderer.camera.updateMatrixWorld(true);
-    const x=534.3521668972031,ray=new THREE.Raycaster();ray.setFromCamera(new THREE.Vector2(x/300-1,0),renderer.camera);
-    const marker=earth.children.find(node=>node.geometry.type==='SphereGeometry'&&node.scale.x===1.65);
-    const delta=ray.intersectObject(marker)[0].distance-ray.intersectObject(earth,false)[0].distance;
-    assert.ok(delta>1e-4&&delta<.03);
-    h.pointer('pointerdown',x,300);h.pointer('pointerup',x,300);
+    const screen=marker=>{const p=marker.getWorldPosition(new THREE.Vector3()).project(renderer.camera);return {x:(p.x+1)/2*600,y:(1-p.y)/2*600}};
+    const dots=earth.children.filter(node=>node.geometry.type==='SphereGeometry'&&node.scale.x===1);
+    const behind=screen(dots[0]),front=screen(dots[1]);
+    // The hidden marker projects inside the disc; a click exactly there is a coordinate on the visible hemisphere.
+    h.pointer('pointerdown',behind.x,behind.y);h.pointer('pointerup',behind.x,behind.y);
     assert.equal(h.choices.length,1);assert.equal(h.choices[0].destinationId,null);
+    // A visible marker is picked from ten pixels away, not only on its few drawn pixels.
+    h.pointer('pointerdown',front.x-10,front.y+8);h.pointer('pointerup',front.x-10,front.y+8);
+    assert.equal(h.choices.length,2);assert.equal(h.choices[1].destinationId,'front');
+    // Beyond the radius it is the ground again.
+    h.pointer('pointerdown',front.x-60,front.y);h.pointer('pointerup',front.x-60,front.y);
+    assert.equal(h.choices.length,3);assert.equal(h.choices[2].destinationId,null);
   }finally{h.cleanup()}
 });
 
