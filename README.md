@@ -1,5 +1,7 @@
 # Daroub — terrain exploration and trip preparation
 
+🌐 **Live site: [daroub.daroub.workers.dev](https://daroub.daroub.workers.dev)**
+
 Arabic-first website with English, French, Chinese and Hindi coverage. Built with the existing React/Vinext framework and deployed as a Cloudflare Worker through Sites. Standard anchor navigation is intentional: it avoids the production RSC navigation failure in the pinned framework version.
 
 ## Included
