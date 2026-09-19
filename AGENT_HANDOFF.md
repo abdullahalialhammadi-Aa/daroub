@@ -15,12 +15,14 @@ Use native anchor navigation. The pinned framework had a production RSC navigati
 ## Current product
 
 - Arabic, English, French, Chinese and Hindi; RTL, reduced motion, keyboard controls and text enlargement.
--14 source-linked destinations in4 terrain categories. Globe auto-rotates at8degrees/second unless reduced motion is enabled; user control pauses it.
+- **UAE focus (2026-09-18).** `lib/region.ts` sets `FOCUS_COUNTRY = 'AE'`: every destination carries an ISO `country`; `applyFocus` archives the 11 world places in the compiled seed and in every served snapshot (`readCatalog`), so the globe, lists, mention matching, fieldbook and planner show the 12 UAE places only while saved trips and shared links to world places keep resolving. Editorial flows read the unfiltered snapshot (`readCatalog({focus:false})`). Set `FOCUS_COUNTRY` to `null` to restore the world with no data change. Terrain category links resolve to UAE anchors (`terrainAnchor`); the angled scene uses UAE species examples (`lifeExamples`).
+- 23 source-linked destinations in the catalogue, 12 active: liwa, jebel-jais, jubail-mangrove (enriched with sourced species and a rules chapter in `lib/uae/enrich.ts`) plus nine researched places in `lib/uae/*.ts` — jebel-hafeet, hatta, mleiha, al-marmoom (desert/mountain), sir-bani-yas, ras-al-khor, dibba-snoopy-island (coast), wadi-wurayah (mountain, access regulated — the text says so) and mushrif-ghaf-woodland (the UAE "forest": a native ghaf woodland, stated honestly). Each has nine cited chapters (incl. `rules` with the 999/998/997 emergency numbers), 3–6 species with `local`/`terrain-example` coverage, place-specific packing rules and an official further-reading reference. `tests/uae-catalog.test.mjs` validates every module; `tests/uae-focus.test.mjs` validates the focus.
+- Globe auto-rotates at 8 degrees/second unless reduced motion is enabled; user control pauses it.
 - Trips, packing suggestions, private inventory, itinerary, shared group preparation and invitations.
 - Email/password accounts with one-time recovery codes; ChatGPT remains an alternative. No email sender or CAPTCHA configured. Do not claim email verification.
 - Owner-scoped D1 records with revisions/operation IDs and account-scoped IndexedDB synchronization. Conflicts remain recoverable copies.
 - Weather: Open-Meteo primary, MET Norway forecast fallback, separate historic monthly requests, explicit provider/timestamps/missing values/stale cache. Honor provider cooldowns and visible-page polling.
-- Dedicated `/fieldbook?destination=...` reader, PDF downloads, official further-reading sources and saved offline reading.90 PDFs:14 destinations plus4 general terrain guides, each in5languages. Free coordinates must not imply verified local species or destination information.
+- Dedicated `/fieldbook?destination=...` reader, PDF downloads, official further-reading sources and saved offline reading. 135 PDFs: 23 destinations plus 4 general terrain guides, each in 5 languages (the nine UAE editions are dated 2026-09-18; `scripts/build-fieldbooks.py --only id,id --date YYYY-MM-DD` rebuilds a subset and merges the manifest). Free coordinates must not imply verified local species or destination information.
 - Retrieval assistant works without provider keys. Optional generative AI is server-only and opt-in; proposed trip edits require explicit user action.
 - Compatible BLE heart-rate devices only, ephemeral readings, sustained alerts; not a native watch app or external emergency dispatch service.
 
@@ -41,7 +43,7 @@ Use native anchor navigation. The pinned framework had a production RSC navigati
 
 Real ChatGPT authentication relies on trusted headers inserted by the Sites gateway. If moving to another host, replace that gateway integration or disable the ChatGPT path and reject/strip incoming `oai-authenticated-user-*` headers at a trusted boundary. Never trust caller-provided identity headers on a publicly reachable Worker. The development mock exists only for loopback development.
 
-`.env.example` documents optional settings. Keep AI keys server-side. Empty DAROUB_OWNER_IDS/DAROUB_EDITOR_IDS grant no editorial roles. Password-account emails have not been externally verified and must not automatically link to ChatGPT identities by matching email.
+`.env.example` documents optional settings. Keep AI keys server-side. Empty DAROUB_OWNER_IDS/DAROUB_EDITOR_IDS grant no editorial roles. `oai-authenticated-*` header identity is honoured only when `DAROUB_CHATGPT_SITES=true` (set it in the Sites runtime and in `dist/server/.dev.vars` for the compiled suites); on Cloudflare Workers or any other host it stays unset and only email/password sessions sign in. Password-account emails have not been externally verified and must not automatically link to ChatGPT identities by matching email.
 
 ## Books
 
@@ -49,15 +51,23 @@ Existing PDF files work as static assets; Python is not required to run/build th
 
 ## Most recent verification
 
-322 distinct tests passed (321 in the broad run, with the emitted-build check rerun successfully after compilation); TypeScript and build passed; lint had0errors and13image warnings. Independent weather review resolved retry/cooldown, hidden-page polling and false-stale cases.
+2026-09-19 (Cloudflare deploy + header hardening): `getChatGPTUser` now ignores `oai-authenticated-*` headers unless `DAROUB_CHATGPT_SITES=true`; 348/348 unit tests, `tsc` clean, `npm run build` passed; compiled suites re-run on the rebuilt Worker (`test-worker` 13/13, `compiled-team` 57/57, `compiled-readonly` passed). Live smoke test on https://daroub.daroub.workers.dev: `/` 200 with Arabic title, `/api/catalog` 23 destinations / 12 active (all `AE`), forged-header `/api/session` → `null` and `/api/editor` → 401, `/fieldbooks/jebel-hafeet-ar.pdf` → `application/pdf`, `/register` 200.
 
-Production checks: all14destinations returned forecast data with7days through MET Norway, all14Arabic PDF assets returned `application/pdf` and valid PDF bytes, BlackForest history returned12months. UI checks covered auto-rotation, interaction pause, region-to-book links, saved reading, mobile390px and200% text. Device/camera hardware and live optional generative AI remain unverified without hardware/configuration.
+2026-09-18 (UAE focus): 348 unit tests passed (`node --test tests/*.test.mjs`, rerun after the production build for the emitted-asset checks); `npx tsc --noEmit` clean; lint 0 errors (15 pre-existing image warnings); `npm run build` passed. Compiled Worker with migrated local D1: `scripts/test-worker.mjs` 13/13 checks, `tests/compiled-team.mjs` 57/57 checks (shared planner boards), `tests/compiled-readonly.mjs` passed on its isolated fixture. On Windows both compiled suites were run against the direct workerd socket (Wrangler's outer proxy resets connections after rejected request bodies, as the README notes) with keep-alive disabled — `node --import <preload that sets an undici Agent with pipelining 0 and no keep-alive> tests/compiled-team.mjs` is what made the team suite deterministic. `/api/catalog` on the compiled Worker returned 23 destinations with exactly the 12 UAE places active; `/`, `/regions?destination=hatta`, `/fieldbook?destination=mushrif-ghaf-woodland` and `/trips` at 390 px rendered without console errors and without world-place names. Hatta's guide showed live Open-Meteo data.
+
+Earlier (release 14): 322 distinct tests passed; TypeScript and build passed; lint had 0 errors and 13 image warnings. Independent weather review resolved retry/cooldown, hidden-page polling and false-stale cases.
+
+Production checks (release 14): all 14 destinations returned forecast data with 7 days through MET Norway, all 14 Arabic PDF assets returned `application/pdf` and valid PDF bytes, Black Forest history returned 12 months. UI checks covered auto-rotation, interaction pause, region-to-book links, saved reading, mobile 390 px and 200% text. Device/camera hardware and live optional generative AI remain unverified without hardware/configuration.
+
+## Cloudflare Workers deployment (free plan)
+
+Config: `handoff/wrangler.production.json` (Worker `daroub`, D1 `daroub` id `8cbace2c-9b9f-4045-807f-48c3d40f34cb`, assets `dist/client`, migrations from `drizzle/`). Account `60cf5de4caf7f5a58a36e221d4f9a636`, workers.dev subdomain `daroub` → https://daroub.daroub.workers.dev. Deploy flow after `wrangler login`: `npm run build` → `npx wrangler d1 migrations apply daroub --remote --config handoff/wrangler.production.json` → `npx wrangler deploy --config handoff/wrangler.production.json`. `DAROUB_CHATGPT_SITES` is intentionally unset there (email/password sign-in only). Editorial roles: `npx wrangler secret put DAROUB_OWNER_IDS --config handoff/wrangler.production.json` with the local-account user ids. Custom domain: add the zone to Cloudflare, then add a `routes` entry with `custom_domain: true` to the config and redeploy.
 
 ## Optional local environment values
 
 An empty environment is sufficient to explore and create local email/password accounts. For a compiled Worker, place local values in `dist/server/.dev.vars` after building, next to its generated Wrangler config, or use an explicit Wrangler environment-file option. Do not assume the root `.env` example is copied into that generated directory. Build output is regenerated; keep your own private backup of local settings outside tracked source.
 
-Export validation: all tracked source bytes matched the published commit; ZIP integrity passed; all90 PDFs are present. The bundled local migration command was executed successfully in a separate extracted copy and applied all4 migrations to a new local database.
+Export validation (release 14): all tracked source bytes matched the published commit; ZIP integrity passed; all 90 PDFs were present. The bundled local migration command was executed successfully in a separate extracted copy and applied all 4 migrations to a new local database.
 
 ## Session 2026-09-18 — globe core, area view, imagery providers, UAE focus
 

@@ -4,7 +4,7 @@ Run export-fieldbook-data.mjs first. Requires reportlab, uharfbuzz,
 arabic-reshaper and python-bidi. DAROUB_FONT_DIR may override Windows fonts.
 Books contain Daroub's source-linked summaries, not copied third-party books.
 """
-import json, os, re, sys
+import json, os, re, sys, argparse
 from pathlib import Path
 from xml.sax.saxutils import escape
 from reportlab.pdfbase import pdfmetrics
@@ -18,9 +18,13 @@ import arabic_reshaper
 from bidi.algorithm import get_display
 
 ROOT=Path(__file__).resolve().parents[1]
+ARGS=argparse.ArgumentParser(description='Build fieldbook PDFs. --only id,id limits the run to those destinations and merges into the existing manifest.')
+ARGS.add_argument('--only',default='',help='comma-separated destination ids (default: every destination and the four terrain books)')
+ARGS.add_argument('--date',default='2026-09-17',help='edition date printed in the books and recorded in the manifest')
+ARGS=ARGS.parse_args()
 DATA=json.loads((ROOT/'work/fieldbook-data.json').read_text(encoding='utf-8'))
 CAT=DATA['catalog']; LOCALES=DATA['locales']; WORDS=DATA['words']
-DATE='2026-09-17'; OUT=ROOT/'public/fieldbooks'; OUT.mkdir(parents=True,exist_ok=True)
+DATE=ARGS.date; OUT=ROOT/'public/fieldbooks'; OUT.mkdir(parents=True,exist_ok=True)
 FONT=Path(os.environ.get('DAROUB_FONT_DIR','C:/Windows/Fonts'))
 for name,file in [('Body','arial.ttf'),('Strong','arialbd.ttf'),('Hindi','Nirmala.ttc'),('Chinese','msyh.ttc')]:
     pdfmetrics.registerFont(TTFont(name,str(FONT/file),shapable=name=='Hindi'))
@@ -117,12 +121,19 @@ def make_book(d,locale):
     return {'url':'/fieldbooks/'+path.name,'pages':max(pages),'publishedAt':DATE}
 
 destinations=list(CAT['destinations'])
-for terrain in DATA['terrains']:
-    guide=next(x for x in CAT['terrainGuidance'] if x['terrainId']==terrain['id'])
-    destinations.append({'id':'terrain-'+terrain['id'],'terrainId':terrain['id'],'names':terrain['names'],'summary':terrain['descriptions'],'sections':guide['sections'],'species':[]})
-manifest={}
+ONLY={x for x in ARGS.only.split(',') if x}
+if ONLY:
+    destinations=[d for d in destinations if d['id'] in ONLY]
+    missing=ONLY-{d['id'] for d in destinations}
+    if missing: sys.exit('unknown destination ids: '+', '.join(sorted(missing)))
+else:
+    for terrain in DATA['terrains']:
+        guide=next(x for x in CAT['terrainGuidance'] if x['terrainId']==terrain['id'])
+        destinations.append({'id':'terrain-'+terrain['id'],'terrainId':terrain['id'],'names':terrain['names'],'summary':terrain['descriptions'],'sections':guide['sections'],'species':[]})
+MANIFEST=ROOT/'lib/fieldbook-pdfs.json'
+manifest=json.loads(MANIFEST.read_text(encoding='utf-8')) if ONLY and MANIFEST.exists() else {}
 for d in destinations:
     manifest[d['id']]={}
     for locale in LOCALES:manifest[d['id']][locale]=make_book(d,locale)
-(ROOT/'lib/fieldbook-pdfs.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+MANIFEST.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(json.dumps({'books':sum(len(v) for v in manifest.values()),'minPages':min(b['pages'] for v in manifest.values() for b in v.values()),'maxPages':max(b['pages'] for v in manifest.values() for b in v.values())}))

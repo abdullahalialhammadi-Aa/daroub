@@ -4,6 +4,7 @@
  * Pure and unit-tested; the component only maps icon keys to drawings.
  */
 import type { Localized, SpeciesEntry, TerrainId } from './toolkit-types';
+import { FOCUS_COUNTRY } from './region';
 
 export type SceneKind = 'animal' | 'plant' | 'hazard' | 'gear' | 'camp';
 export type SceneIcon = 'paw' | 'bird' | 'fish' | 'bug' | 'rabbit' | 'turtle' | 'worm' | 'squirrel' | 'shell' | 'dog' | 'cat' | 'treePine' | 'treeDeciduous' | 'flower' | 'wheat' | 'sprout' | 'leaf' | 'sun' | 'droplets' | 'tent' | 'wind' | 'footprints' | 'mountainSnow' | 'snowflake' | 'compass' | 'waves' | 'flame';
@@ -41,6 +42,42 @@ const life: Record<TerrainId, Example[]> = {
     { id: 'seagrass', kind: 'plant', icon: 'leaf', topic: 'nature', label: ['الأعشاب البحرية', 'Seagrass', 'Herbier marin', '海草', 'समुद्री घास'] },
   ],
 };
+/** UAE terrain examples (docs/uae-plan.md §4): native species typical of each terrain, drawn with distinct icons.
+ *  Educational examples only — the catalogue's sourced species still come first and carry the local/example flag. */
+const uaeLife: Record<TerrainId, Example[]> = {
+  desert: [
+    { id: 'arabian-oryx', kind: 'animal', icon: 'paw', topic: 'nature', label: ['المها العربي', 'Arabian oryx', 'Oryx d’Arabie', '阿拉伯大羚羊', 'अरबी ओरिक्स'] },
+    { id: 'arabian-red-fox', kind: 'animal', icon: 'dog', topic: 'nature', label: ['الثعلب الأحمر العربي', 'Arabian red fox', 'Renard roux d’Arabie', '阿拉伯赤狐', 'अरबी लाल लोमड़ी'] },
+    { id: 'scorpion', kind: 'animal', icon: 'bug', topic: 'precautions', label: ['العقرب', 'Scorpion', 'Scorpion', '蝎子', 'बिच्छू'] },
+    { id: 'ghaf', kind: 'plant', icon: 'treeDeciduous', topic: 'nature', label: ['شجرة الغاف', 'Ghaf tree', 'Ghaf (Prosopis cineraria)', '加夫树（牧豆树）', 'घाफ़ (खेजड़ी) वृक्ष'] },
+    { id: 'samr', kind: 'plant', icon: 'sprout', topic: 'nature', label: ['شجرة السمر', 'Samr acacia', 'Acacia samr', '伞刺金合欢（萨姆尔）', 'समर बबूल'] },
+  ],
+  mountain: [
+    { id: 'arabian-tahr', kind: 'animal', icon: 'paw', topic: 'nature', label: ['الطهر العربي', 'Arabian tahr', 'Tahr d’Arabie', '阿拉伯塔尔羊', 'अरबी टार'] },
+    { id: 'egyptian-vulture', kind: 'animal', icon: 'bird', topic: 'nature', label: ['الرخمة المصرية', 'Egyptian vulture', 'Vautour percnoptère', '白兀鹫', 'सफ़ेद (मिस्री) गिद्ध'] },
+    { id: 'saw-scaled-viper', kind: 'animal', icon: 'worm', topic: 'precautions', label: ['أفعى الحراشف المنشارية', 'Saw-scaled viper', 'Échide carénée', '锯鳞蝰', 'आरी-शल्क वाइपर'] },
+    { id: 'wild-olive', kind: 'plant', icon: 'treeDeciduous', topic: 'nature', label: ['الزيتون البري', 'Wild olive', 'Olivier sauvage', '野橄榄', 'जंगली जैतून'] },
+    { id: 'sidr', kind: 'plant', icon: 'sprout', topic: 'nature', label: ['السدر', 'Sidr tree', 'Jujubier sidr', '滨枣（西德尔）', 'सिद्र (बेर) वृक्ष'] },
+  ],
+  forest: [
+    { id: 'ghaf', kind: 'plant', icon: 'treeDeciduous', topic: 'nature', label: ['شجرة الغاف', 'Ghaf tree', 'Ghaf (Prosopis cineraria)', '加夫树（牧豆树）', 'घाफ़ (खेजड़ी) वृक्ष'] },
+    { id: 'arabian-babbler', kind: 'animal', icon: 'bird', topic: 'nature', label: ['الثرثارة العربية', 'Arabian babbler', 'Cratérope écaillé', '阿拉伯鸫鹛', 'अरबी बैबलर'] },
+    { id: 'desert-hedgehog', kind: 'animal', icon: 'paw', topic: 'nature', label: ['القنفذ الصحراوي', 'Desert hedgehog', 'Hérisson du désert', '沙漠刺猬', 'मरुस्थलीय हेजहॉग'] },
+    { id: 'arabian-red-fox', kind: 'animal', icon: 'dog', topic: 'nature', label: ['الثعلب الأحمر العربي', 'Arabian red fox', 'Renard roux d’Arabie', '阿拉伯赤狐', 'अरबी लाल लोमड़ी'] },
+    { id: 'sidr', kind: 'plant', icon: 'sprout', topic: 'nature', label: ['السدر', 'Sidr tree', 'Jujubier sidr', '滨枣（西德尔）', 'सिद्र (बेर) वृक्ष'] },
+  ],
+  coast: [
+    { id: 'greater-flamingo', kind: 'animal', icon: 'bird', topic: 'nature', label: ['النحام الكبير', 'Greater flamingo', 'Flamant rose', '大红鹳', 'बड़ा राजहंस'] },
+    { id: 'green-turtle', kind: 'animal', icon: 'turtle', topic: 'nature', label: ['السلحفاة الخضراء', 'Green turtle', 'Tortue verte', '绿海龟', 'हरा समुद्री कछुआ'] },
+    { id: 'dugong', kind: 'animal', icon: 'fish', topic: 'nature', label: ['الأطوم', 'Dugong', 'Dugong', '儒艮', 'डुगोंग'] },
+    { id: 'grey-mangrove', kind: 'plant', icon: 'treeDeciduous', topic: 'nature', label: ['القرم الرمادي', 'Grey mangrove', 'Palétuvier gris', '白骨壤（灰红树）', 'ग्रे मैंग्रोव'] },
+    { id: 'jellyfish', kind: 'animal', icon: 'bug', topic: 'precautions', label: ['قنديل البحر', 'Jellyfish', 'Méduse', '水母', 'जेलीफ़िश'] },
+  ],
+};
+const lifeByFocus: Record<string, Record<TerrainId, Example[]>> = { world: life, AE: uaeLife };
+/** Terrain examples for the product focus (lib/region.ts); unknown focuses fall back to the world set. */
+export function lifeExamples(terrainId: TerrainId, focus: string | null = FOCUS_COUNTRY): Example[] { const set = lifeByFocus[focus ?? 'world'] ?? life; return set[terrainId] ?? set.desert; }
+
 const essentials: Record<TerrainId, Example[]> = {
   desert: [
     { id: 'heat', kind: 'hazard', icon: 'sun', topic: 'precautions', label: ['حرارة النهار', 'Daytime heat', 'Chaleur du jour', '白天高温', 'दिन की गर्मी'] },
@@ -96,14 +133,14 @@ function place(index: number, count: number, radius: number): { dx: number; dy: 
   const angle = (index * 137.508 * Math.PI) / 180 + 0.6, r = radius * (0.38 + 0.62 * Math.sqrt((index + 1) / Math.max(count, 1)));
   return { dx: Math.round(Math.cos(angle) * r), dy: Math.round(Math.sin(angle) * r * 0.72) };
 }
-/** Up to six living things (catalogue species first, then terrain examples) and four essentials, positioned around the centre. */
-export function sceneItems(terrainId: TerrainId, species: SpeciesEntry[], radius: number, maxLife = 6): SceneItem[] {
+/** Up to six living things (catalogue species first, then the focus's terrain examples) and four essentials, positioned around the centre. */
+export function sceneItems(terrainId: TerrainId, species: SpeciesEntry[], radius: number, maxLife = 6, focus: string | null = FOCUS_COUNTRY): SceneItem[] {
   const items: Omit<SceneItem, 'dx' | 'dy'>[] = [];
   for (const entry of species.slice(0, maxLife)) {
     const { kind, icon } = classifySpecies(entry.id, entry.name[1] ?? '');
     items.push({ id: `species:${entry.id}`, kind, icon, label: entry.name, topic: 'nature', example: entry.coverage !== 'local' });
   }
-  for (const example of life[terrainId] ?? life.desert) {
+  for (const example of lifeExamples(terrainId, focus)) {
     if (items.length >= maxLife) break;
     if (items.some((item) => item.icon === example.icon && item.kind === example.kind)) continue;
     items.push({ ...example, example: true });

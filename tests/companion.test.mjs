@@ -11,7 +11,7 @@ const health = await load('../lib/health-monitor.ts');
 const guide = await load('../lib/assistant-guide.ts');
 const i18n = await load('../lib/companion-i18n.ts');
 const context = await load('../lib/assistant-context.ts');
-const {seedCatalog}=await load('../lib/catalog-seed.ts');
+const {seedCatalog,catalogForTerrain}=await load('../lib/catalog-seed.ts');
 const data = bytes => new DataView(Uint8Array.from(bytes).buffer);
 
 test('BLE UINT8 and little-endian UINT16 measurements, extra fields, contact flags', () => {
@@ -66,7 +66,7 @@ test('Assistant preserves arbitrary coordinates and stable terrain IDs in report
   assert.equal(selected.destinationId, null); assert.equal(selected.terrainIndex, 2); assert.deepEqual(selected.point, { lat: -12.3, lon: 44.5 });
   assert.equal(context.assistantReportHref(selected.destinationId, selected.terrainIndex, selected.point), '/regions?terrainId=forest&lat=-12.3&lon=44.5');
   assert.equal(context.assistantContext(new URLSearchParams('terrain=1&generic=1&lat=91&lon=10')).point, null);
-  assert.equal(context.assistantContext(new URLSearchParams('terrain=1')).destinationId, 'jebel-shams');
+  assert.equal(context.assistantContext(new URLSearchParams('terrain=1')).destinationId, catalogForTerrain(seedCatalog, 1).id);
   assert.equal(context.assistantContext(new URLSearchParams('destination=hurghada')).terrainIndex, 3);
 });
 test('Provider context excludes trips, telemetry and invented actions', () => {

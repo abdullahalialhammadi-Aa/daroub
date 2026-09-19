@@ -17,7 +17,7 @@ test('custom coordinates receive only a generic terrain book and unknown destina
   assert.equal(fieldbookPdf('unpublished-place',terrainId,locale),undefined);
  }
  assert.equal(fieldbookPdf(undefined,'invalid','ar'),undefined);
- assert.equal(Object.values(manifest).reduce((count,book)=>count+Object.keys(book).length,0),90);
+ assert.equal(Object.values(manifest).reduce((count,book)=>count+Object.keys(book).length,0),135,'23 destinations and 4 terrain books in five languages');
 });
 test('further reading is specific, explicit about its language and uses official HTTPS references',()=>{
  const references=JSON.parse(fs.readFileSync('lib/official-region-books.json','utf8'));

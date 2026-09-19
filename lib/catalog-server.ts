@@ -1,6 +1,7 @@
 import {env} from 'cloudflare:workers';
 import {database} from './sync-server';
 import {seedCatalog} from './catalog-seed';
+import {applyFocus} from './region';
 import {validateCatalog,validateDraft,localeContent} from './catalog-validation';
 import {canonical} from './preparation-schema';
 import type {CatalogSnapshot,CatalogDraft,CatalogHistory,Destination,EditorRole,SourceReference} from './toolkit-types';
@@ -12,19 +13,22 @@ export function editorRole(userId:string):EditorRole{
  const includes=(key:string)=>typeof config[key]==='string'&&(config[key] as string).split(',').map(s=>s.trim()).filter(Boolean).includes(userId);
  return includes('DAROUB_OWNER_IDS')?'owner':includes('DAROUB_EDITOR_IDS')?'editor':null;
 }
-export async function readCatalog():Promise<CatalogSnapshot>{
+/** The served snapshot: the published head or the compiled seed, with the product focus applied (out-of-focus places archived).
+ *  Editorial flows pass `{focus:false}` so drafts and history keep the unfiltered editorial content. */
+export async function readCatalog(options:{focus?:boolean}={}):Promise<CatalogSnapshot>{
  const row=await database().prepare('SELECT h.revision,v.payload FROM catalog_heads h LEFT JOIN catalog_versions v ON v.revision=h.revision WHERE h.id=1').first<{revision:number;payload:string|null}>();
  if(row?.revision&&!row.payload)throw Error('Published catalog missing');
- return row?.payload?JSON.parse(row.payload):structuredClone(seedCatalog);
+ const catalog:CatalogSnapshot=row?.payload?JSON.parse(row.payload):structuredClone(seedCatalog);
+ return options.focus===false?catalog:applyFocus(catalog);
 }
 type DraftRow={id:string;revision:number;base_revision:number;payload:string;reviewed:string;updated_at:string};
 const draftRow=(r:DraftRow):CatalogDraft=>({id:r.id,revision:r.revision,baseCatalogRevision:r.base_revision,snapshot:JSON.parse(r.payload),reviewedLocales:JSON.parse(r.reviewed),updatedAt:r.updated_at});
-export async function editorState(){const db=database();const [drafts,history,catalog]=await Promise.all([db.prepare('SELECT id,revision,base_revision,payload,reviewed,updated_at FROM catalog_drafts ORDER BY updated_at DESC LIMIT 100').all<DraftRow>(),db.prepare('SELECT revision,published_at,actor,restored_from FROM catalog_versions ORDER BY revision DESC LIMIT 100').all<{revision:number;published_at:string;actor:string;restored_from:number|null}>(),readCatalog()]);return {drafts:drafts.results.map(draftRow),history:history.results.map(r=>({revision:r.revision,publishedAt:r.published_at,actor:r.actor,...(r.restored_from!==null?{restoredFrom:r.restored_from}:{})})) as CatalogHistory[],catalog}}
+export async function editorState(){const db=database();const [drafts,history,catalog]=await Promise.all([db.prepare('SELECT id,revision,base_revision,payload,reviewed,updated_at FROM catalog_drafts ORDER BY updated_at DESC LIMIT 100').all<DraftRow>(),db.prepare('SELECT revision,published_at,actor,restored_from FROM catalog_versions ORDER BY revision DESC LIMIT 100').all<{revision:number;published_at:string;actor:string;restored_from:number|null}>(),readCatalog({focus:false})]);return {drafts:drafts.results.map(draftRow),history:history.results.map(r=>({revision:r.revision,publishedAt:r.published_at,actor:r.actor,...(r.restored_from!==null?{restoredFrom:r.restored_from}:{})})) as CatalogHistory[],catalog}}
 export async function saveCatalogDraft(actor:string,input:unknown){
  let draft:CatalogDraft;try{draft=validateDraft(input)}catch{throw new CatalogInvalid('Invalid draft')}
  const db=database(),prior=await db.prepare('SELECT id,revision,base_revision,payload,reviewed,updated_at FROM catalog_drafts WHERE id=?').bind(draft.id).first<DraftRow>();
  if((prior?.revision??0)!==draft.revision)throw new CatalogConflict('Draft changed');
- const baseline=prior?JSON.parse(prior.payload) as CatalogSnapshot:await readCatalog();
+ const baseline=prior?JSON.parse(prior.payload) as CatalogSnapshot:await readCatalog({focus:false});
  if(draft.baseCatalogRevision!==(prior?.base_revision??baseline.revision))throw new CatalogConflict('Create a new draft to rebase onto published content');
  // Changing a locale or shared source/rule metadata invalidates its earlier review.
  const reviewed=draft.reviewedLocales.filter(locale=>localeContent(baseline,locale)===localeContent(draft.snapshot,locale));

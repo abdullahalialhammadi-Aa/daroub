@@ -12,37 +12,35 @@ Recorded 2026-09-18. From here on the product focuses on places in the United Ar
 
 ## 2. Scope decision for the UAE
 
-Two ways to focus the product; the second is recommended for a first UAE release.
+**Applied 2026-09-18 — a combination of both options.** `lib/region.ts` declares `FOCUS_COUNTRY = 'AE'`; every destination carries an ISO `country` (compiled ones via `destinationCountries`, new ones in their own record); `applyFocus` archives out-of-focus places in the compiled seed and in every served snapshot (`readCatalog`), so the globe, lists, mention matching, the fieldbook and the planner show UAE places only while saved trips and shared links to world places keep resolving (`archived` entries stay in the catalogue). Editorial flows read the unfiltered snapshot. Reverting to the world is one edit (`FOCUS_COUNTRY = null`) with no data change. Tests: `tests/uae-focus.test.mjs`.
+
+The two options that were considered:
 
 1. Region flag: a `DAROUB_REGION=uae` value that filters `activeDestinations()` to UAE entries, keeps world content in the seed for later.
 2. Archive: mark every non-UAE destination `archived: true` in `lib/catalog-seed.ts`; the globe, lists, mention matching and the fieldbook then show UAE places only. Reversible with one edit; tests in `tests/catalog-content.test.mjs` that count destinations must be updated.
 
-Not done yet: this is a product decision to confirm with the owner before applying.
-
 ## 3. UAE places
 
-Existing in the catalogue (thin data, one or two species each):
+**Seeded 2026-09-18.** The three existing places were enriched (`lib/uae/enrich.ts`: sourced species to 4–6 each, a `rules` chapter with permits/protected-area rules and the 999/998/997 emergency numbers, seven UAE packing rules such as a heat plan, sun protection, printed permits, 4×4 recovery gear for Liwa, a life-jacket/tide check for Jubail, warm wind layers for Jebel Jais). The eight proposed additions plus the forest example below were researched from official/operator pages that were actually fetched, and written in all five locales (`lib/uae/<id>.ts`, validated by `tests/uae-catalog.test.mjs`). Every chapter cites a source; numbers appear only when a source states them; unsourced advice is labelled as inference.
 
 | id | Name | Emirate | Terrain | Coordinates |
 |---|---|---|---|---|
 | liwa | Liwa Oasis | Abu Dhabi | desert | 23.140, 53.780 |
 | jebel-jais | Jebel Jais | Ras Al Khaimah | mountain | 25.954, 56.151 |
 | jubail-mangrove | Jubail Mangrove Park | Abu Dhabi | coast | 24.543, 54.485 |
+| jebel-hafeet | Jebel Hafeet and Green Mubazzarah (Jebel Hafit Desert Park) | Abu Dhabi (Al Ain) | mountain | see record |
+| hatta | Hatta (dam, wadis, Wadi Hub trails, bike centre) | Dubai | mountain | see record |
+| mleiha | Mleiha (national park, archaeological centre, Fossil Rock) | Sharjah | desert | see record |
+| al-marmoom | Al Marmoom Desert Conservation Reserve and Al Qudra Lakes | Dubai | desert | see record |
+| sir-bani-yas | Sir Bani Yas Island (Arabian Wildlife Park) | Abu Dhabi | coast | see record |
+| wadi-wurayah | Wadi Wurayah National Park — access regulated, stated plainly | Fujairah | mountain | see record |
+| ras-al-khor | Ras Al Khor Wildlife Sanctuary | Dubai | coast | see record |
+| dibba-snoopy-island | Dibba / Al Aqah shore and Snoopy Island | Fujairah | coast | see record |
+| mushrif-ghaf-woodland | Mushrif National Park ghaf woodland | Dubai | forest | see record |
 
-Proposed additions (to research, then seed):
+Forest terrain: decided — the UAE has no temperate forest, so the native ghaf woodland of Mushrif National Park is the UAE `forest` example and its text says so. The terrain category link for "forest" resolves to it (`terrainAnchor` in `lib/region.ts`).
 
-| Place | Emirate | Terrain | Why |
-|---|---|---|---|
-| Jebel Hafeet and Green Mubazzarah | Abu Dhabi (Al Ain) | mountain | Road summit, hot springs, easy family access |
-| Hatta (dam, wadis, Hatta Wadi Hub trails) | Dubai | mountain | Marked hiking and biking trails, camping |
-| Mleiha (Fossil Rock, archaeology centre) | Sharjah | desert | Guided desert activities, camping, heritage |
-| Al Marmoom Desert Conservation Reserve and Al Qudra Lakes | Dubai | desert | Cycling track, birdlife, regulated camping |
-| Sir Bani Yas Island (Arabian Wildlife Park) | Abu Dhabi | coast | Oryx, gazelle, cheetah; guided only |
-| Wadi Wurayah National Park | Fujairah | mountain | Freshwater wadi, protected; access rules matter |
-| Ras Al Khor Wildlife Sanctuary | Dubai | coast | Flamingos, hides, free entry, strict rules |
-| Dibba and Snoopy Island shore | Fujairah | coast | Snorkelling, sea conditions |
-
-Forest terrain: the UAE has no forest in the app's sense. Options: present ghaf woodland (Mushrif Park, Al Ain) as the UAE "forest" example, or hide the forest terrain for the UAE scope. Decision pending.
+Known gaps recorded by the researchers: discovermleiha.ae could not be read by the fetcher (Visit Sharjah pages were cited instead); several Liwa and Jubail species are `terrain-example` because no fetched page documents them at the exact place; Hatta has one `local` species (its others are examples). Images remain the illustrative terrain photos with the existing disclaimer.
 
 ## 4. Data required per place (matches the catalogue shape)
 
@@ -64,20 +62,23 @@ Every field below exists in `lib/toolkit-types.ts` and is rendered by the app. A
 
 ## 6. Research and build steps (in order)
 
-1. Confirm the scope decision (section 2) and the forest question (section 3).
-2. Run the research workflow (designed, not yet run): one researcher per place plus one for cross-cutting conditions, official sources only, structured output with a source URL for every claim; then one skeptic per terrain group that refutes unsupported claims. Output `data/uae-plan.json`.
-3. Translate approved English text into the other four locales (separate pass; keep Arabic first and reviewed by a native speaker).
-4. Seed the catalogue: entries, sources with `reviewedAt`, species with coverage flags, packing rules; run `node --test tests/*.test.mjs`, `npx tsc --noEmit`, `npm run lint`, `npm run build`.
-5. Tailor the scene examples to UAE species; update the copy keys; re-run tests.
-6. Images: obtain licensed photographs per place or keep illustrative terrain images with the existing disclaimer.
+1. ✅ Scope decision (section 2) and the forest question (section 3) — applied.
+2. ✅ Research: one researcher per place plus one for the three existing places, official/operator sources only, every claim with a fetched source; output is the typed modules in `lib/uae/` (not a JSON), each validated for five complete locales, nine cited chapters, 3–6 species, UAE coordinates and canonical packing-rule activities.
+3. ✅ Five locales written together (Arabic first). Still recommended: a native Arabic review pass before the public UAE release.
+4. ✅ Seed: `lib/catalog-seed.ts` composes `lib/uae/index.ts`; `node --test tests/*.test.mjs`, `npx tsc --noEmit`, `npm run lint`, `npm run build` pass (see AGENT_HANDOFF.md "Most recent verification").
+5. ✅ Scene examples: `lib/area-scene.ts` `lifeExamples(terrain, focus)` — Arabian oryx, Arabian red fox, scorpion, ghaf, samr (desert); Arabian tahr, Egyptian vulture, saw-scaled viper, wild olive, sidr (mountain); ghaf, Arabian babbler, desert hedgehog, red fox, sidr (forest); greater flamingo, green turtle, dugong, grey mangrove, jellyfish (coast).
+6. Images: still the illustrative terrain photos with the disclaimer; licensed place photographs remain open.
 7. Deployment: add `IMAGERY_GOOGLE_KEY` (and optionally `IMAGERY_DEFAULT=google`) in the Sites host environment; Google requires its copyright text (already shown) and possibly the Google logo next to it; every tile request is billed.
+8. ✅ Fieldbooks: 45 new PDFs (`scripts/build-fieldbooks.py --only … --date 2026-09-18`), manifest 135 editions; official further-reading references added for the nine places in `lib/official-region-books.json`.
 
 ## 7. Open decisions for the owner
 
-- Scope mechanism (flag or archive) and whether world content stays reachable.
-- Forest terrain in the UAE scope.
+- ~~Scope mechanism (flag or archive) and whether world content stays reachable~~ — applied: focus constant + archived world content (reachable through saved trips and links, hidden from lists).
+- ~~Forest terrain in the UAE scope~~ — applied: Mushrif ghaf woodland.
 - Google logo placement and tile budget.
 - Whether species names should include scientific names in the UI.
+- A native Arabic reviewer for the nine new places and the enrichment text before the public release.
+- Cycling is now a selectable activity (`activityIds`); confirm the label wording in each locale.
 
 ## 8. Operational notes carried over
 

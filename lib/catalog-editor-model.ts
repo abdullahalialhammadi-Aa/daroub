@@ -1,9 +1,10 @@
 import type {CatalogDraft,CatalogSnapshot,Destination,GuideSection,Localized,PackingRule,SourceReference,SpeciesEntry,TerrainId} from './toolkit-types';
 import {catalogGuidance} from './catalog-seed';
+import {FOCUS_COUNTRY} from './region';
 export const emptyText=():Localized=>['','','','',''];
 export function createCatalogDraft(snapshot:CatalogSnapshot,id:string):CatalogDraft{return{id,revision:0,baseCatalogRevision:snapshot.revision,snapshot:structuredClone(snapshot),reviewedLocales:[],updatedAt:new Date().toISOString()}}
 export function editCatalogDraft(draft:CatalogDraft,edit:(snapshot:CatalogSnapshot)=>void):CatalogDraft{const next=structuredClone(draft);edit(next.snapshot);next.reviewedLocales=[];return next}
-export function emptyDestination(snapshot:CatalogSnapshot,id:string,terrainId:TerrainId='desert'):Destination {return{id,terrainId,terrainIndex:['desert','mountain','forest','coast'].indexOf(terrainId),names:emptyText(),summary:emptyText(),lat:0,lon:0,image:'/images/desert.jpg',imageIsIllustrative:true,sourceIds:[],sections:structuredClone(catalogGuidance(snapshot,terrainId).sections),species:[],timezone:'',archived:false}}
+export function emptyDestination(snapshot:CatalogSnapshot,id:string,terrainId:TerrainId='desert'):Destination {return{id,terrainId,terrainIndex:['desert','mountain','forest','coast'].indexOf(terrainId),names:emptyText(),summary:emptyText(),lat:0,lon:0,image:'/images/desert.jpg',imageIsIllustrative:true,sourceIds:[],sections:structuredClone(catalogGuidance(snapshot,terrainId).sections),species:[],timezone:'',archived:false,...(FOCUS_COUNTRY?{country:FOCUS_COUNTRY}:{})}}
 export function emptySection(id:string):GuideSection{return{id,title:emptyText(),body:emptyText(),sourceIds:[]}}
 export function emptySpecies(id:string):SpeciesEntry{return{id,name:emptyText(),description:emptyText(),precaution:emptyText(),sourceIds:[],coverage:'terrain-example'}}
 export function emptySource(id:string):SourceReference{return{id,title:'',url:'',reviewedAt:new Date().toISOString().slice(0,10)}}

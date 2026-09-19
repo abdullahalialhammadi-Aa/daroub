@@ -120,8 +120,11 @@ test('malformed stored hashes fail safely and malformed, duplicate, expired or s
 test('local identity takes precedence over trusted platform headers without merging accounts by email',async()=>{
  const h=harness(),registered=await h.post(registration),local=(await identity(h,registered)).user;
  let incoming=new Headers({host:'daroub.test',cookie:cookie(registered),'oai-authenticated-user-id':'platform-user','oai-authenticated-user-email':email});
- const load=createLoader({'next/headers':{headers:async()=>incoming},'next/navigation':{redirect(){throw Error('unexpected redirect');}},'@/lib/local-auth-server':h.auth});
+ const env={DAROUB_CHATGPT_SITES:'true'};
+ const load=createLoader({'cloudflare:workers':{env},'next/headers':{headers:async()=>incoming},'next/navigation':{redirect(){throw Error('unexpected redirect');}},'@/lib/local-auth-server':h.auth});
  const getUser=load('app/chatgpt-auth.ts').getChatGPTUser;
+ env.DAROUB_CHATGPT_SITES=undefined;incoming.delete('cookie');assert.equal(await getUser(),null,'platform headers are forgeable outside ChatGPT Sites and must be ignored there');
+ env.DAROUB_CHATGPT_SITES='true';incoming.set('cookie',cookie(registered));
  assert.equal((await getUser()).userId,local.userId);assert.notEqual(local.userId,'platform-user');assert.equal((await getUser()).authMethod,'password');
  incoming.delete('cookie');assert.equal((await getUser()).userId,'platform-user');assert.equal((await getUser()).authMethod,'chatgpt');
  incoming.set('cookie','__Host-daroub_session=malformed');assert.equal(await getUser(),null,'an invalid local session must not switch silently to the provider identity');

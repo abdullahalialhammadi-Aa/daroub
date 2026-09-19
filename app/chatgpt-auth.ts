@@ -1,6 +1,7 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import {localIdentity} from '@/lib/local-auth-server';
+import {chatGPTHeadersTrusted} from '@/lib/release-mode';
 
 export type ChatGPTUser = {
   userId: string;
@@ -24,6 +25,7 @@ export async function getChatGPTUser(): Promise<ChatGPTUser | null> {
   const requestHeaders = await headers();
   const local=await localIdentity(requestHeaders);
   if(local.handled)return local.user;
+  if(!chatGPTHeadersTrusted())return null;
   const userId = requestHeaders.get(USER_ID_HEADER);
   const email = requestHeaders.get(USER_EMAIL_HEADER);
   if (!userId || !email) return null;

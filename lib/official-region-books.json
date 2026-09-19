@@ -138,5 +138,95 @@
     "publisher": "Ministry of Tourism, Republic of Indonesia / Wonderful Indonesia",
     "coverage": "National tourism guide to the park's volcanic scenery, viewpoints, culture and general access. It is broader than Mount Bromo and is not a current volcanic-hazard or trail-opening notice. Descriptions of climbs must not be interpreted as current permission to approach a crater or summit.",
     "verifiedAt": "2026-09-17"
+  },
+  {
+    "destinationId": "jebel-hafeet",
+    "title": "Jebel Hafit Desert Park — visitor guide",
+    "url": "https://visitabudhabi.ae/en/things-to-do/nature-and-wildlife/parks/jebel-hafit-desert-park",
+    "language": "en",
+    "format": "web-guide",
+    "publisher": "Experience Abu Dhabi / Department of Culture and Tourism — Abu Dhabi",
+    "coverage": "Official visitor page for the desert park at the foot of Jebel Hafeet: activities, camping and access notes, with the Bronze Age tombs of the Al Ain World Heritage listing. It covers the park and mountain foot, not the summit road conditions on a given day.",
+    "verifiedAt": "2026-09-18"
+  },
+  {
+    "destinationId": "hatta",
+    "title": "Visit Hatta — Hiking trails",
+    "url": "https://www.visithatta.com/en/play/hiking",
+    "language": "en",
+    "format": "web-guide",
+    "publisher": "Visit Hatta / Government of Dubai",
+    "coverage": "Official Hatta destination site: the marked hiking trail network, grades and starting points, alongside the dam, kayaking and mountain-bike pages. Trail status, weather closures and permits must still be confirmed on the day.",
+    "verifiedAt": "2026-09-18"
+  },
+  {
+    "destinationId": "mleiha",
+    "title": "Mleiha National Park — activities and heritage",
+    "url": "https://www.visitsharjah.com/en/activities/adventure/mleiha-national-park/",
+    "language": "en",
+    "format": "web-guide",
+    "publisher": "Sharjah Commerce and Tourism Development Authority / Visit Sharjah",
+    "coverage": "Official Sharjah tourism page for the Mleiha area: guided desert and archaeology experiences, camping and the archaeological centre. Broader Sharjah coverage; not a species inventory or a live access notice.",
+    "verifiedAt": "2026-09-18"
+  },
+  {
+    "destinationId": "al-marmoom",
+    "title": "Al Marmoom Desert Conservation Reserve",
+    "url": "https://www.visitdubai.com/en/places-to-visit/marmoom-reserve",
+    "language": "en",
+    "format": "web-guide",
+    "publisher": "Visit Dubai / Dubai Department of Economy and Tourism",
+    "coverage": "Official destination page for the reserve, its lakes, wildlife, cycling track and regulated camping. Rules are administered by Dubai Municipality; check its protected-areas pages for current permits and closures.",
+    "verifiedAt": "2026-09-18"
+  },
+  {
+    "destinationId": "sir-bani-yas",
+    "title": "Arabian Wildlife Park — Sir Bani Yas Island",
+    "url": "https://visitabudhabi.ae/en/things-to-do/nature-and-wildlife/wildlife/arabian-wildlife-park",
+    "language": "en",
+    "format": "web-guide",
+    "publisher": "Experience Abu Dhabi / Department of Culture and Tourism — Abu Dhabi",
+    "coverage": "Official page for the island wildlife park: free-roaming Arabian oryx, gazelles and reintroduced predators, guided-only nature drives and activity booking through the island operators. Sea conditions and ferry or flight access are confirmed by the operator.",
+    "verifiedAt": "2026-09-18"
+  },
+  {
+    "destinationId": "wadi-wurayah",
+    "title": "المحمية الوطنية لوادي الوريعة — السياحة البيئية",
+    "url": "https://www.moccae.gov.ae/ar/knowledge/ecotourism/wadi-wurayah-national-park",
+    "language": "ar",
+    "format": "web-guide",
+    "publisher": "Ministry of Climate Change and Environment — United Arab Emirates",
+    "coverage": "Federal ministry page (Arabic) on the national park as an ecotourism and protected site: its freshwater wadi ecosystem, protected status and visiting rules. Access is regulated by the Fujairah authorities; confirm current permission before planning.",
+    "verifiedAt": "2026-09-18"
+  },
+  {
+    "destinationId": "ras-al-khor",
+    "title": "Dubai Protected Areas — Plan your visit",
+    "url": "https://www.dm.gov.ae/dubai-protected-areas/plan-your-visit/",
+    "language": "en",
+    "format": "web-guide",
+    "publisher": "Dubai Municipality",
+    "coverage": "Official visitor information for Dubai’s protected areas including Ras Al Khor Wildlife Sanctuary: hides, opening arrangements, booking and rules. Covers the municipality’s reserve network; not a bird checklist for a given day.",
+    "verifiedAt": "2026-09-18"
+  },
+  {
+    "destinationId": "dibba-snoopy-island",
+    "title": "Al Aqah Beach — Fujairah",
+    "url": "https://tourism.fujairah.ae/destinations/al-aqah-beach",
+    "language": "en",
+    "format": "web-guide",
+    "publisher": "Fujairah Tourism and Antiquities Authority",
+    "coverage": "Official Fujairah tourism page for the Al Aqah shore facing Snoopy Island: beach and resort access, snorkelling and diving operators. Sea state, marine warnings and reef rules must be checked with the operator and the National Center of Meteorology on the day.",
+    "verifiedAt": "2026-09-18"
+  },
+  {
+    "destinationId": "mushrif-ghaf-woodland",
+    "title": "Mushrif National Park",
+    "url": "https://www.visitdubai.com/en/places-to-visit/mushrif-national-park",
+    "language": "en",
+    "format": "web-guide",
+    "publisher": "Visit Dubai / Dubai Department of Economy and Tourism",
+    "coverage": "Official destination page for the park and its natural ghaf woodland: cycling and walking tracks, camping and barbecue zones, fees and hours. Park regulations are set by Dubai Municipality; it is a native dryland woodland, not a temperate forest.",
+    "verifiedAt": "2026-09-18"
   }
 ]

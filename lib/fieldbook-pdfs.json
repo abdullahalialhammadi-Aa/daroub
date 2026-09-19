@@ -484,5 +484,248 @@
       "pages": 4,
       "publishedAt": "2026-09-17"
     }
+  },
+  "jebel-hafeet": {
+    "ar": {
+      "url": "/fieldbooks/jebel-hafeet-ar.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    },
+    "en": {
+      "url": "/fieldbooks/jebel-hafeet-en.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    },
+    "fr": {
+      "url": "/fieldbooks/jebel-hafeet-fr.pdf",
+      "pages": 8,
+      "publishedAt": "2026-09-18"
+    },
+    "zh": {
+      "url": "/fieldbooks/jebel-hafeet-zh.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    },
+    "hi": {
+      "url": "/fieldbooks/jebel-hafeet-hi.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    }
+  },
+  "hatta": {
+    "ar": {
+      "url": "/fieldbooks/hatta-ar.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    },
+    "en": {
+      "url": "/fieldbooks/hatta-en.pdf",
+      "pages": 8,
+      "publishedAt": "2026-09-18"
+    },
+    "fr": {
+      "url": "/fieldbooks/hatta-fr.pdf",
+      "pages": 8,
+      "publishedAt": "2026-09-18"
+    },
+    "zh": {
+      "url": "/fieldbooks/hatta-zh.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    },
+    "hi": {
+      "url": "/fieldbooks/hatta-hi.pdf",
+      "pages": 8,
+      "publishedAt": "2026-09-18"
+    }
+  },
+  "mleiha": {
+    "ar": {
+      "url": "/fieldbooks/mleiha-ar.pdf",
+      "pages": 6,
+      "publishedAt": "2026-09-18"
+    },
+    "en": {
+      "url": "/fieldbooks/mleiha-en.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    },
+    "fr": {
+      "url": "/fieldbooks/mleiha-fr.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    },
+    "zh": {
+      "url": "/fieldbooks/mleiha-zh.pdf",
+      "pages": 6,
+      "publishedAt": "2026-09-18"
+    },
+    "hi": {
+      "url": "/fieldbooks/mleiha-hi.pdf",
+      "pages": 6,
+      "publishedAt": "2026-09-18"
+    }
+  },
+  "al-marmoom": {
+    "ar": {
+      "url": "/fieldbooks/al-marmoom-ar.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    },
+    "en": {
+      "url": "/fieldbooks/al-marmoom-en.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    },
+    "fr": {
+      "url": "/fieldbooks/al-marmoom-fr.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    },
+    "zh": {
+      "url": "/fieldbooks/al-marmoom-zh.pdf",
+      "pages": 6,
+      "publishedAt": "2026-09-18"
+    },
+    "hi": {
+      "url": "/fieldbooks/al-marmoom-hi.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    }
+  },
+  "sir-bani-yas": {
+    "ar": {
+      "url": "/fieldbooks/sir-bani-yas-ar.pdf",
+      "pages": 8,
+      "publishedAt": "2026-09-18"
+    },
+    "en": {
+      "url": "/fieldbooks/sir-bani-yas-en.pdf",
+      "pages": 8,
+      "publishedAt": "2026-09-18"
+    },
+    "fr": {
+      "url": "/fieldbooks/sir-bani-yas-fr.pdf",
+      "pages": 8,
+      "publishedAt": "2026-09-18"
+    },
+    "zh": {
+      "url": "/fieldbooks/sir-bani-yas-zh.pdf",
+      "pages": 8,
+      "publishedAt": "2026-09-18"
+    },
+    "hi": {
+      "url": "/fieldbooks/sir-bani-yas-hi.pdf",
+      "pages": 8,
+      "publishedAt": "2026-09-18"
+    }
+  },
+  "wadi-wurayah": {
+    "ar": {
+      "url": "/fieldbooks/wadi-wurayah-ar.pdf",
+      "pages": 8,
+      "publishedAt": "2026-09-18"
+    },
+    "en": {
+      "url": "/fieldbooks/wadi-wurayah-en.pdf",
+      "pages": 8,
+      "publishedAt": "2026-09-18"
+    },
+    "fr": {
+      "url": "/fieldbooks/wadi-wurayah-fr.pdf",
+      "pages": 8,
+      "publishedAt": "2026-09-18"
+    },
+    "zh": {
+      "url": "/fieldbooks/wadi-wurayah-zh.pdf",
+      "pages": 9,
+      "publishedAt": "2026-09-18"
+    },
+    "hi": {
+      "url": "/fieldbooks/wadi-wurayah-hi.pdf",
+      "pages": 8,
+      "publishedAt": "2026-09-18"
+    }
+  },
+  "ras-al-khor": {
+    "ar": {
+      "url": "/fieldbooks/ras-al-khor-ar.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    },
+    "en": {
+      "url": "/fieldbooks/ras-al-khor-en.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    },
+    "fr": {
+      "url": "/fieldbooks/ras-al-khor-fr.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    },
+    "zh": {
+      "url": "/fieldbooks/ras-al-khor-zh.pdf",
+      "pages": 8,
+      "publishedAt": "2026-09-18"
+    },
+    "hi": {
+      "url": "/fieldbooks/ras-al-khor-hi.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    }
+  },
+  "dibba-snoopy-island": {
+    "ar": {
+      "url": "/fieldbooks/dibba-snoopy-island-ar.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    },
+    "en": {
+      "url": "/fieldbooks/dibba-snoopy-island-en.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    },
+    "fr": {
+      "url": "/fieldbooks/dibba-snoopy-island-fr.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    },
+    "zh": {
+      "url": "/fieldbooks/dibba-snoopy-island-zh.pdf",
+      "pages": 8,
+      "publishedAt": "2026-09-18"
+    },
+    "hi": {
+      "url": "/fieldbooks/dibba-snoopy-island-hi.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    }
+  },
+  "mushrif-ghaf-woodland": {
+    "ar": {
+      "url": "/fieldbooks/mushrif-ghaf-woodland-ar.pdf",
+      "pages": 6,
+      "publishedAt": "2026-09-18"
+    },
+    "en": {
+      "url": "/fieldbooks/mushrif-ghaf-woodland-en.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    },
+    "fr": {
+      "url": "/fieldbooks/mushrif-ghaf-woodland-fr.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    },
+    "zh": {
+      "url": "/fieldbooks/mushrif-ghaf-woodland-zh.pdf",
+      "pages": 6,
+      "publishedAt": "2026-09-18"
+    },
+    "hi": {
+      "url": "/fieldbooks/mushrif-ghaf-woodland-hi.pdf",
+      "pages": 7,
+      "publishedAt": "2026-09-18"
+    }
   }
 }

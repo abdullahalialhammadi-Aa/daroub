@@ -4,7 +4,7 @@ Arabic-first website with English, French, Chinese and Hindi coverage. Built wit
 
 ## Included
 
-- Four terrain categories and separate sourced destination records for Liwa, Jebel Shams, Black Forest and Hurghada. Local facts are separated from general terrain advice and illustrative species examples.
+- Four terrain categories and separate sourced destination records. The product is currently focused on the United Arab Emirates (`lib/region.ts`, `docs/uae-plan.md`): twelve UAE places are active and the world places stay archived in the catalogue so earlier trips and links keep resolving. Local facts are separated from general terrain advice and illustrative species examples.
 - Search, coordinate entry, bookmarks, shareable destination URLs, back/reload preservation, globe focus/reset and a searchable alternative to WebGL. Optional on-device camera hand control.
 - Trips with dates, group size, transport, notes, day-by-day itineraries, local times and zones, quantity-based packing, duplication, deletion, JSON import/export and self-contained itinerary downloads.
 - Reusable private gear inventory with conditions, maintenance/expiry dates, archiving and trip assignment. Versioned rules explain packing suggestions; acceptance and dismissal are explicit. Ownership, assignment and packed quantities stay separate.
@@ -43,7 +43,7 @@ Generate D1 migrations with npm run db:generate and inspect them before publishi
 
 ## Editorial permissions and recovery
 
-Configure DAROUB_OWNER_IDS and optionally DAROUB_EDITOR_IDS as server-only comma-separated verified ChatGPT Site user IDs. Empty values grant no editing access; there is no first-user administrator bootstrap. Editors save drafts; owners publish and restore content. The existing Site audience remains independent of these roles. Catalog snapshots are limited to 1,500,000 UTF-8 bytes in addition to field/count limits.
+Configure DAROUB_OWNER_IDS and optionally DAROUB_EDITOR_IDS as server-only comma-separated user IDs (ChatGPT Site user IDs, or local password-account IDs). ChatGPT header identity is trusted only when DAROUB_CHATGPT_SITES=true; outside ChatGPT Sites (for example a Cloudflare Workers deployment) leave it unset so only email/password sign-in is accepted. Empty values grant no editing access; there is no first-user administrator bootstrap. Editors save drafts; owners publish and restore content. The existing Site audience remains independent of these roles. Catalog snapshots are limited to 1,500,000 UTF-8 bytes in addition to field/count limits.
 
 Set DAROUB_READ_ONLY=true and redeploy the compatible saved version to pause server mutations without changing private records, receipts or catalog content. Reads, exports and local drafts remain available. Set it back to false and redeploy to resume. See docs/recovery.md. Do not redeploy an earlier protocol-1 backend once v2 records exist.
 
