@@ -16,7 +16,9 @@ export function selectionFromQuery(query: URLSearchParams, destinations: Destina
   const hasCoordinates = query.has('lat') || query.has('lon');
   if (hasCoordinates && !coordinates) return null;
   if (destination && (!coordinates || (Math.abs(coordinates.lat-destination.lat)<0.00001 && Math.abs(coordinates.lon-destination.lon)<0.00001))) {
-    return {destinationId: destination.id, terrainId: destination.terrainId, lat: destination.lat, lon: destination.lon};
+    // A valid terrainId in the link overrides the destination's own terrain, so visitors can explore a place through another landscape's guidance.
+    const override = query.get('terrainId');
+    return {destinationId: destination.id, terrainId: terrainIds.includes(override as TerrainId) ? override as TerrainId : destination.terrainId, lat: destination.lat, lon: destination.lon};
   }
   if (!coordinates) return null;
   const terrainId = query.get('terrainId');

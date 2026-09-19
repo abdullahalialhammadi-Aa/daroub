@@ -75,7 +75,17 @@ body.gc-chrome-open:has(.globe-core) .toolkit-bar{top:var(--gc-header-h,78px)}
 @media (max-width:700px){.globe-core .gc-stage{padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))}}
 /* the globe core hides the nine-button control bar; a single reset control appears once a place is locked */
 .globe-core .globe-controls{display:none}
-.globe-core .nasa-credit{top:calc(8px + env(safe-area-inset-top,0px));bottom:auto;left:auto;right:auto;inset-inline-end:14px;text-align:end;font-size:.625rem;opacity:.8}
+/* the credit is a label, never a click target: it must not float over the globe and swallow drags (bundle order can place the base rule after this one, hence the extra specificity) */
+.globe-core.orbital-page .nasa-credit,.globe-core .nasa-credit{top:calc(8px + env(safe-area-inset-top,0px));bottom:auto;left:auto;right:auto;width:max-content;max-width:60vw;inset-inline-end:14px;text-align:end;font-size:.625rem;opacity:.8;pointer-events:none}
+.globe-core.orbital-page .nasa-credit a{pointer-events:auto}
+/* terrain picker: a small list under the terrain chip */
+.globe-core .gc-terrain-menu{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:8;margin:0;padding:6px;list-style:none;display:grid;gap:4px;min-width:200px;border-radius:14px;border:1px solid #2f5a5e;background:#0b2229f2;box-shadow:0 12px 32px #000a;pointer-events:auto;backdrop-filter:blur(6px)}
+.globe-core .gc-terrain-menu button{width:100%;display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;border:1px solid transparent;background:transparent;color:var(--orb-text,#edf7f6);font:inherit;font-size:.875rem;cursor:pointer;text-align:start}
+.globe-core .gc-terrain-menu button svg{color:var(--orb-accent,#7be2d0);flex:0 0 auto}
+.globe-core .gc-terrain-menu button:hover,.globe-core .gc-terrain-menu button:focus-visible{background:#123c3a;border-color:var(--orb-accent,#7be2d0)}
+.globe-core .gc-terrain-menu [aria-selected="true"]{border-color:var(--orb-accent,#7be2d0);font-weight:700}
+.globe-core .gc-terrain-ask{border-top:1px solid #2c454d;padding-top:4px;margin-top:2px}
+.globe-core .gc-terrain-ask button{font-size:.8125rem;color:var(--orb-muted,#b0c8cd)}
 .globe-core .gc-reset{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));inset-inline-start:64px;z-index:70;height:44px;padding:0 12px;display:inline-flex;align-items:center;gap:6px;border-radius:12px;border:1px solid #345862;background:#0b2229e6;color:var(--orb-text,#edf7f6);font-size:.8125rem;font-weight:600;cursor:pointer}
 .globe-core .gc-reset:hover,.globe-core .gc-reset:focus-visible{border-color:var(--orb-accent,#7be2d0)}
 @media (max-width:700px){.globe-core .gc-reset span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.globe-core .gc-reset{width:44px;padding:0;justify-content:center}}

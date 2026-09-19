@@ -5,6 +5,7 @@ import {useSite} from './site-shell';
 import {useCatalog} from '@/lib/catalog-client';
 import {activeDestinations,catalogDestination} from '@/lib/catalog-seed';
 import {terrains} from '@/lib/terrain';
+import {suggestedGroupSize} from '@/lib/group-size';
 import {terrainIndex,selectionQuery,type ExplorerSelection} from '@/lib/explorer-location';
 import {globeText} from '@/lib/globe-dashboard-copy';
 import {explorerCopy} from '@/lib/explorer-copy';
@@ -37,7 +38,7 @@ export function GlobeHome(){
  const [question,setQuestion]=useState(''),[turn,setTurn]=useState<Turn|null>(null),[busy,setBusy]=useState(false),[status,setStatus]=useState('');
  const [providers,setProviders]=useState<AIProviderSummary[]>([]),[brain,setBrain]=useState<AIProviderId|''>(''),[brainOpen,setBrainOpen]=useState(false),[chrome,setChrome]=useState(false);
  const [weather,setWeather]=useState<{key:string;data:ExplorerWeatherResult|null;failed:boolean}>({key:'',data:null,failed:false}),[weatherOpen,setWeatherOpen]=useState(false);
- const [clock,setClock]=useState(()=>Date.now()),[ring,setRing]=useState({w:0,h:0}),[locked,setLocked]=useState(false),[viewReset,setViewReset]=useState(0);
+ const [clock,setClock]=useState(()=>Date.now()),[ring,setRing]=useState({w:0,h:0}),[locked,setLocked]=useState(false),[viewReset,setViewReset]=useState(0),[terrainOpen,setTerrainOpen]=useState(false);
  // A user-driven selection locks the globe on the place (the surface zooms in and stops); the reset control releases it.
  const pick=(next:ExplorerSelection)=>{setLocked(true);choose(next);};
  const sessionRef=useRef<SessionInfo|null>(null),requestRef=useRef<AbortController|null>(null),inputRef=useRef<HTMLInputElement>(null),stageRef=useRef<HTMLDivElement>(null),weatherTrigger=useRef<HTMLButtonElement>(null);
@@ -55,7 +56,7 @@ export function GlobeHome(){
  // The floating icons orbit the stage centre, where the locked place sits.
  useEffect(()=>{const el=stageRef.current;if(!el)return;const ro=new ResizeObserver(()=>setRing({w:el.clientWidth,h:el.clientHeight}));ro.observe(el);return()=>ro.disconnect();},[resolved]);
  useEffect(()=>{document.body.classList.toggle('gc-chrome-open',chrome);return()=>{document.body.classList.remove('gc-chrome-open');};},[chrome]);
- useEffect(()=>{if(!chrome&&!brainOpen)return;const close=(e:KeyboardEvent)=>{if(e.key==='Escape'){setChrome(false);setBrainOpen(false);}};document.addEventListener('keydown',close);return()=>document.removeEventListener('keydown',close);},[chrome,brainOpen]);
+ useEffect(()=>{if(!chrome&&!brainOpen&&!terrainOpen)return;const close=(e:KeyboardEvent)=>{if(e.key==='Escape'){setChrome(false);setBrainOpen(false);setTerrainOpen(false);}};document.addEventListener('keydown',close);return()=>document.removeEventListener('keydown',close);},[chrome,brainOpen,terrainOpen]);
  function mentioned(text:string){
   const q=normalize(text);if(q.length<3)return null;
   const strip=(w:string)=>w.replace(/^(و|ف|ب|ل|ك|لل|بال|وال|فال|ال)/,'');
@@ -90,7 +91,7 @@ export function GlobeHome(){
  const weatherValue=!live?'…':typeof temperature==='number'?`${Math.round(temperature)}°`:'—';
  const weatherStale=!!live?.data&&weatherIsStale(live.data,clock);
  const rules=catalog.packingRules.filter(rule=>rule.terrainIds.includes(selection.terrainId)).length;
- const species=destination?.species.length??0,sections=destination?.sections.length??0;
+ const species=destination?.species.length??0,sections=destination?.sections.length??0,group=suggestedGroupSize(selection.terrainId,destination);
  const chips:Chip[]=[
   {family:'weather',Icon:CloudSun,value:weatherValue,label:g('liveWeather')+(weatherStale?' · '+t('stale'):''),muted:weatherValue==='—'},
   {family:'clock',Icon:Clock,value:localTime??'—',label:t('location'),muted:!localTime},
@@ -98,11 +99,13 @@ export function GlobeHome(){
   {family:'equipment',Icon:Backpack,value:String(rules),label:g('equipment'),topic:'equipment'},
   {family:'nature',Icon:Leaf,value:destination?String(species):'·',label:g('nature'),topic:'nature'},
   {family:'precautions',Icon:ShieldCheck,value:'!',label:g('safety'),topic:'precautions'},
-  {family:'group',Icon:Users,value:'2+',label:t('groupCount'),topic:'group'},
+  {family:'group',Icon:Users,value:group+'+',label:g('groupSuggested'),topic:'group'},
   {family:'book',Icon:BookOpen,value:destination?String(sections):'·',label:g('guide'),href:destination?'/fieldbook?destination='+encodeURIComponent(destination.id):'/regions?terrain='+index},
  ];
  const radius=Math.min(ring.w,ring.h)*0.36,ringMode=ring.w>=700&&radius>150;
- function open(chip:Chip){if(chip.family==='weather'){setWeatherOpen(true);return;}if(chip.family==='clock')return;if(chip.topic)void ask(c(chip.topic==='precautions'?'precautions':chip.topic),chip.topic);}
+ function open(chip:Chip){if(chip.family==='weather'){setWeatherOpen(true);return;}if(chip.family==='clock')return;if(chip.family==='terrain'){setTerrainOpen(v=>!v);return;}if(chip.topic)void ask(c(chip.topic==='precautions'?'precautions':chip.topic),chip.topic);}
+ // Terrain is a lens on the selected point: the place stays, its guidance (equipment rules, assistant topic) follows the chosen landscape.
+ function chooseTerrain(id:ExplorerSelection['terrainId']){setTerrainOpen(false);if(id!==selection.terrainId)choose({...selection,terrainId:id});}
  const brainLabel=brain?(providers.find(item=>item.id===brain)?.label??brain):c('guideMode');
  return <main id="main" className="orbital-page globe-core" dir={locale==='ar'?'rtl':'ltr'}>
   <button type="button" className="gc-menu" aria-expanded={chrome} aria-controls="gc-chrome-note" aria-label={t('home')} onClick={()=>setChrome(open=>!open)}>{chrome?<X size={20} aria-hidden/>:<Menu size={20} aria-hidden/>}</button>
@@ -116,7 +119,11 @@ export function GlobeHome(){
     {chips.map((chip,i)=>{const angle=(-90+i*(360/chips.length))*Math.PI/180;const style=ringMode?{left:`calc(50% + ${Math.round(Math.cos(angle)*radius)}px)`,top:`calc(50% + ${Math.round(Math.sin(angle)*radius)}px)`}:undefined;
      const inner=<><chip.Icon size={18} aria-hidden/><b>{chip.value}</b><span>{chip.label}</span></>;
      return chip.href?<a key={chip.family} className={'gc-float gc-'+chip.family} style={style} href={chip.href} title={chip.label}>{inner}</a>
-      :<button key={chip.family} ref={chip.family==='weather'?weatherTrigger:undefined} type="button" className={'gc-float gc-'+chip.family+(chip.muted?' gc-muted':'')} style={style} onClick={()=>open(chip)} disabled={busy||chip.family==='clock'} aria-label={chip.label+': '+chip.value} title={chip.label}>{inner}</button>;})}
+      :<button key={chip.family} ref={chip.family==='weather'?weatherTrigger:undefined} type="button" className={'gc-float gc-'+chip.family+(chip.muted?' gc-muted':'')} style={style} onClick={()=>open(chip)} disabled={busy||chip.family==='clock'} aria-label={chip.label+': '+chip.value} title={chip.family==='terrain'?g('changeTerrain'):chip.label} aria-haspopup={chip.family==='terrain'?'listbox':undefined} aria-expanded={chip.family==='terrain'?terrainOpen:undefined}>{inner}</button>;})}
+    {terrainOpen&&<ul className="gc-terrain-menu" role="listbox" aria-label={g('changeTerrain')}>
+     {terrains.map(item=>{const I=terrainIcons[item.id as keyof typeof terrainIcons]??Sun;return <li key={item.id}><button type="button" role="option" aria-selected={item.id===selection.terrainId} onClick={()=>chooseTerrain(item.id as ExplorerSelection['terrainId'])}><I size={16} aria-hidden/><span>{tr(item.names)}</span></button></li>;})}
+     <li className="gc-terrain-ask"><button type="button" onClick={()=>{setTerrainOpen(false);void ask(c('terrain'),'terrain');}}><Sparkles size={14} aria-hidden/><span>{g('askTerrain')}</span></button></li>
+    </ul>}
    </div>}
   </div></div>
   <p className="sr-only" role="status" aria-atomic="true">{g('selected')}: {title}. {selection.lat.toFixed(3)}, {selection.lon.toFixed(3)}. {tr(terrain.names)}</p>
