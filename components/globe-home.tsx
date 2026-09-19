@@ -1,13 +1,13 @@
 'use client';
-import {useEffect,useRef,useState} from 'react';
-import {Send,Menu,X,Sparkles,ArrowUpRight,Backpack,Leaf,ShieldCheck,CloudSun,BookOpen,Clock,Users,Sun,Mountain,Trees,Waves,RotateCcw} from 'lucide-react';
+import {useEffect,useRef,useState,type KeyboardEvent as ReactKeyboardEvent} from 'react';
+import {Send,Menu,X,Sparkles,ArrowUpRight,Backpack,Leaf,ShieldCheck,CloudSun,BookOpen,Clock,Users,Sun,Mountain,Trees,Waves,RotateCcw,Hand,MessageCircleQuestion} from 'lucide-react';
 import {useSite} from './site-shell';
 import {useCatalog} from '@/lib/catalog-client';
 import {activeDestinations,catalogDestination} from '@/lib/catalog-seed';
 import {terrains} from '@/lib/terrain';
 import {suggestedGroupSize} from '@/lib/group-size';
 import {terrainIndex,selectionQuery,type ExplorerSelection} from '@/lib/explorer-location';
-import {globeText} from '@/lib/globe-dashboard-copy';
+import {globeText,suggestedQuestions,suggestedQuestion} from '@/lib/globe-dashboard-copy';
 import {explorerCopy} from '@/lib/explorer-copy';
 import {companionText} from '@/lib/companion-i18n';
 import {assistantSource,retrieveGuide,type AssistantRequest,type AssistantTopic} from '@/lib/assistant-guide';
@@ -39,9 +39,11 @@ export function GlobeHome(){
  const [providers,setProviders]=useState<AIProviderSummary[]>([]),[brain,setBrain]=useState<AIProviderId|''>(''),[brainOpen,setBrainOpen]=useState(false),[chrome,setChrome]=useState(false);
  const [weather,setWeather]=useState<{key:string;data:ExplorerWeatherResult|null;failed:boolean}>({key:'',data:null,failed:false}),[weatherOpen,setWeatherOpen]=useState(false);
  const [clock,setClock]=useState(()=>Date.now()),[ring,setRing]=useState({w:0,h:0}),[locked,setLocked]=useState(false),[viewReset,setViewReset]=useState(0),[terrainOpen,setTerrainOpen]=useState(false);
+ // The gesture hint shows until the visitor touches the globe; suggestions open when the empty prompt is focused and remember which topic a picked question answers.
+ const [hintDone,setHintDone]=useState(false),[suggestOpen,setSuggestOpen]=useState(false),[picked,setPicked]=useState<{text:string;topic:AssistantTopic}|null>(null);
  // A user-driven selection locks the globe on the place (the surface zooms in and stops); the reset control releases it.
- const pick=(next:ExplorerSelection)=>{setLocked(true);choose(next);};
- const sessionRef=useRef<SessionInfo|null>(null),requestRef=useRef<AbortController|null>(null),inputRef=useRef<HTMLInputElement>(null),stageRef=useRef<HTMLDivElement>(null),weatherTrigger=useRef<HTMLButtonElement>(null);
+ const pick=(next:ExplorerSelection)=>{setLocked(true);setHintDone(true);choose(next);};
+ const sessionRef=useRef<SessionInfo|null>(null),requestRef=useRef<AbortController|null>(null),inputRef=useRef<HTMLInputElement>(null),stageRef=useRef<HTMLDivElement>(null),weatherTrigger=useRef<HTMLButtonElement>(null),formRef=useRef<HTMLFormElement>(null);
  const destination=catalogDestination(catalog,selection.destinationId),index=terrainIndex(selection.terrainId),terrain=terrains[index];
  const title=destination?tr(destination.names):t('selectedPoint'),context=selectionQuery(selection);
  const weatherKey=`${selection.lat.toFixed(3)},${selection.lon.toFixed(3)}`;
@@ -56,7 +58,8 @@ export function GlobeHome(){
  // The floating icons orbit the stage centre, where the locked place sits.
  useEffect(()=>{const el=stageRef.current;if(!el)return;const ro=new ResizeObserver(()=>setRing({w:el.clientWidth,h:el.clientHeight}));ro.observe(el);return()=>ro.disconnect();},[resolved]);
  useEffect(()=>{document.body.classList.toggle('gc-chrome-open',chrome);return()=>{document.body.classList.remove('gc-chrome-open');};},[chrome]);
- useEffect(()=>{if(!chrome&&!brainOpen&&!terrainOpen)return;const close=(e:KeyboardEvent)=>{if(e.key==='Escape'){setChrome(false);setBrainOpen(false);setTerrainOpen(false);}};document.addEventListener('keydown',close);return()=>document.removeEventListener('keydown',close);},[chrome,brainOpen,terrainOpen]);
+ useEffect(()=>{if(!chrome&&!brainOpen&&!terrainOpen&&!suggestOpen)return;const close=(e:KeyboardEvent)=>{if(e.key==='Escape'){setChrome(false);setBrainOpen(false);setTerrainOpen(false);setSuggestOpen(false);}};document.addEventListener('keydown',close);return()=>document.removeEventListener('keydown',close);},[chrome,brainOpen,terrainOpen,suggestOpen]);
+ useEffect(()=>{if(!suggestOpen)return;const away=(e:PointerEvent)=>{if(!(e.target instanceof Node)||!formRef.current?.contains(e.target))setSuggestOpen(false);};document.addEventListener('pointerdown',away);return()=>document.removeEventListener('pointerdown',away);},[suggestOpen]);
  function mentioned(text:string){
   const q=normalize(text);if(q.length<3)return null;
   const strip=(w:string)=>w.replace(/^(و|ف|ب|ل|ك|لل|بال|وال|فال|ال)/,'');
@@ -107,12 +110,26 @@ export function GlobeHome(){
  // Terrain is a lens on the selected point: the place stays, its guidance (equipment rules, assistant topic) follows the chosen landscape.
  function chooseTerrain(id:ExplorerSelection['terrainId']){setTerrainOpen(false);if(id!==selection.terrainId)choose({...selection,terrainId:id});}
  const brainLabel=brain?(providers.find(item=>item.id===brain)?.label??brain):c('guideMode');
+ // suggested questions name the place, or its landscape when the point is not a catalogued destination
+ const place=(destination?tr(destination.names):tr(terrain.names)).split(' · ')[0],suggestions=suggestedQuestions.map(([key,topic])=>({key,topic,text:suggestedQuestion(locale,key,place)}));
+ const showHint=resolved&&!locked&&!turn&&!busy&&!hintDone;
+ const globeTouched=(e:{target:EventTarget|null})=>{if(e.target instanceof Element&&e.target.closest('.globe-canvas'))setHintDone(true);};
+ function suggestKeys(e:ReactKeyboardEvent<HTMLElement>){
+  const options=[...(formRef.current?.querySelectorAll<HTMLButtonElement>('.gc-suggest [role=option]')??[])];if(!options.length)return;
+  const at=options.indexOf(document.activeElement as HTMLButtonElement);
+  if(e.key==='ArrowDown'){e.preventDefault();setSuggestOpen(true);options[at<0?0:(at+1)%options.length]?.focus();}
+  else if(e.key==='ArrowUp'){e.preventDefault();setSuggestOpen(true);options[at<=0?options.length-1:at-1]?.focus();}
+  else if(e.key==='Escape'&&at>=0)inputRef.current?.focus();
+ }
+ const quietFocus=useRef(false);
+ function pickSuggestion(item:{text:string;topic:AssistantTopic}){setQuestion(item.text);setPicked(item);setSuggestOpen(false);quietFocus.current=true;inputRef.current?.focus();quietFocus.current=false;}
  return <main id="main" className="orbital-page globe-core" dir={locale==='ar'?'rtl':'ltr'}>
   <button type="button" className="gc-menu" aria-expanded={chrome} aria-controls="gc-chrome-note" aria-label={t('home')} onClick={()=>setChrome(open=>!open)}>{chrome?<X size={20} aria-hidden/>:<Menu size={20} aria-hidden/>}</button>
   {locked&&<button type="button" className="gc-reset" onClick={()=>{stageRef.current?.querySelector<HTMLElement>('.globe-canvas')?.focus({preventScroll:true});setLocked(false);setViewReset(n=>n+1);}} aria-label={tr(explorerCopy.resetGlobe)}><RotateCcw size={18} aria-hidden/><span>{tr(explorerCopy.resetGlobe)}</span></button>}
   <span id="gc-chrome-note" className="sr-only">{t('home')} · {t('regions')} · {t('globe')}</span>
-  <div className="gc-stage"><div className="gc-stage-inner" ref={stageRef}>
+  <div className="gc-stage" onPointerDownCapture={globeTouched} onKeyDownCapture={globeTouched}><div className="gc-stage-inner" ref={stageRef}>
    {resolved?<GlobeSurface selection={selection} onChoose={pick} locked={locked} viewReset={viewReset}/>:<p className="globe-loading" role="status">{t('load')}</p>}
+   {showHint&&<p className="gc-gesture-hint" style={ringMode?{top:`calc(50% + ${Math.round(radius)+36}px)`}:undefined}><Hand size={14} aria-hidden/><span>{g('gestureHint')}</span></p>}
    {resolved&&locked&&<AreaView lat={selection.lat} lon={selection.lon} label={g('areaView')+' · '+title} terrainId={selection.terrainId} species={destination?.species??[]} onTopic={(topic,text)=>void ask(text,topic)} destinations={activeDestinations(catalog)} selectedId={selection.destinationId} onPick={point=>pick({destinationId:null,terrainId:selection.terrainId,lat:point.lat,lon:point.lon})} onPickDestination={item=>pick({destinationId:item.id,terrainId:item.terrainId,lat:item.lat,lon:item.lon})}/>}
    {resolved&&!turn&&!busy&&<div className={'gc-float-layer'+(ringMode?' gc-ring':' gc-row')} role="group" aria-label={g('summary')+' · '+title}>
     <p className="gc-float-title"><span>{title}</span>{destination&&<small>{tr(destination.summary)}</small>}</p>
@@ -143,7 +160,11 @@ export function GlobeHome(){
     <a className="gc-plan" href={'/trips?'+context}>{g('plan')}<ArrowUpRight size={14} aria-hidden/></a>
    </div>}
   </section>}
-  <form className="gc-prompt" onSubmit={e=>{e.preventDefault();void ask(question);}}>
+  <form ref={formRef} className="gc-prompt" onSubmit={e=>{e.preventDefault();setSuggestOpen(false);void ask(question,picked&&picked.text===question.trim()?picked.topic:undefined);}}>
+   {suggestOpen&&!busy&&<ul id="gc-suggest" className="gc-suggest" role="listbox" aria-label={g('suggestions')} onKeyDown={suggestKeys}>
+    <li className="gc-suggest-note"><MessageCircleQuestion size={14} aria-hidden/><span>{g('suggestions')}</span></li>
+    {suggestions.map(item=><li key={item.key}><button type="button" role="option" aria-selected={question.trim()===item.text} onClick={()=>pickSuggestion(item)}><Sparkles size={14} aria-hidden/><span>{item.text}</span></button></li>)}
+   </ul>}
    <div className="gc-brain">
     <button type="button" className="gc-chip" aria-haspopup="listbox" aria-expanded={brainOpen} aria-label={c('aiProvider')} onClick={()=>setBrainOpen(open=>!open)} disabled={providers.length===0&&!brain}>{brainLabel}</button>
     {brainOpen&&<ul className="gc-brain-list" role="listbox" aria-label={c('aiProvider')}>
@@ -153,7 +174,7 @@ export function GlobeHome(){
     </ul>}
    </div>
    <label htmlFor="gc-question" className="sr-only">{t('question')}</label>
-   <input ref={inputRef} id="gc-question" value={question} onChange={e=>setQuestion(e.target.value)} placeholder={t('question')} maxLength={1500} required autoComplete="off" enterKeyHint="send"/>
+   <input ref={inputRef} id="gc-question" value={question} onChange={e=>{setQuestion(e.target.value);setSuggestOpen(!e.target.value.trim());}} onFocus={()=>{if(!quietFocus.current)setSuggestOpen(true);}} onClick={()=>setSuggestOpen(true)} onKeyDown={suggestKeys} onBlur={e=>{if(!(e.relatedTarget instanceof Node)||!formRef.current?.contains(e.relatedTarget))setSuggestOpen(false);}} placeholder={t('question')} maxLength={1500} required autoComplete="off" enterKeyHint="send" role="combobox" aria-haspopup="listbox" aria-expanded={suggestOpen} aria-controls="gc-suggest" aria-autocomplete="list"/>
    <button disabled={busy||!question.trim()} type="submit" className="gc-send" aria-label={t('send')}><Send size={20} aria-hidden/></button>
   </form>
   <Dialog open={weatherOpen} onOpenChange={setWeatherOpen}><DialogContent showCloseButton={false} className="orb-weather-dialog" onCloseAutoFocus={event=>{event.preventDefault();weatherTrigger.current?.focus();}} dir={locale==='ar'?'rtl':'ltr'}><DialogTitle>{g('fullWeather')} · {title}</DialogTitle><DialogDescription><bdi>{selection.lat.toFixed(3)}°, {selection.lon.toFixed(3)}°</bdi></DialogDescription><DialogClose className="dialog-x" aria-label={g('close')}><X size={20} aria-hidden/></DialogClose><div className="orb-modal-scroll">{weatherOpen&&<Weather lat={selection.lat} lon={selection.lon}/>}</div></DialogContent></Dialog>

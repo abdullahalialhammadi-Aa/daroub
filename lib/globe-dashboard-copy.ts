@@ -23,6 +23,14 @@ export const globeDashboardWords: Record<string, string[]> = {
   changeTerrain: ['غيّر نوع التضاريس', 'Change terrain type', 'Changer le type de terrain', '更改地形类型', 'भूभाग का प्रकार बदलें'],
   askTerrain: ['اسأل الدليل عن هذه التضاريس', 'Ask the guide about this terrain', 'Interroger le guide sur ce terrain', '向指南询问此地形', 'इस भूभाग के बारे में गाइड से पूछें'],
   groupSuggested: ['العدد المقترح للمجموعة', 'Suggested group size', 'Taille de groupe conseillée', '建议同行人数', 'सुझाई गई समूह संख्या'],
+  gestureHint: ['اسحب لتدوير الكرة · اضغط على مكان لتقريبه', 'Drag to spin the globe · tap a place to zoom in', 'Glissez pour tourner le globe · touchez un lieu pour zoomer', '拖动旋转地球 · 点按地点放大', 'ग्लोब घुमाने के लिए खींचें · ज़ूम के लिए किसी जगह पर टैप करें'],
+  suggestions: ['أسئلة مقترحة — اختر سؤالاً ثم اضغط إرسال', 'Suggested questions — pick one, then send', 'Questions suggérées — choisissez, puis envoyez', '推荐问题 — 选择后点击发送', 'सुझाए गए प्रश्न — चुनें, फिर भेजें'],
+  qEquipment: ['ماذا أحضر معي إلى {place}؟', 'What should I bring to {place}?', 'Que dois-je emporter à {place} ?', '去{place}需要带什么？', '{place} जाने के लिए क्या ले जाऊँ?'],
+  qPrecautions: ['ما الاحتياطات المهمة في {place}؟', 'What precautions matter at {place}?', 'Quelles précautions prendre à {place} ?', '在{place}要注意什么？', '{place} में कौन सी सावधानियाँ ज़रूरी हैं?'],
+  qSeasons: ['ما أفضل وقت لزيارة {place}؟', 'When is the best time to visit {place}?', 'Quelle est la meilleure période pour {place} ?', '什么时候去{place}最好？', '{place} जाने का सबसे अच्छा समय कब है?'],
+  qNature: ['ما الحياة الطبيعية في {place}؟', 'What wildlife and plants live at {place}?', 'Quelle nature trouve-t-on à {place} ?', '{place}有哪些动植物？', '{place} में कौन से जीव और पौधे हैं?'],
+  qGroup: ['كم شخصاً يُنصح به للرحلة إلى {place}؟', 'How many people should travel to {place}?', 'Combien de personnes pour {place} ?', '去{place}建议几个人同行？', '{place} के लिए कितने लोग साथ जाएँ?'],
+  qTerrain: ['كيف أستعد لتضاريس {place}؟', 'How do I prepare for the terrain at {place}?', 'Comment me préparer au terrain de {place} ?', '如何为{place}的地形做准备？', '{place} के भूभाग की तैयारी कैसे करूँ?'],
   selected: ['الوجهة المختارة', 'Selected destination', 'Destination choisie', '已选目的地', 'चुना गया गंतव्य'],
   destinations: ['اختر وجهتك', 'Choose your destination', 'Choisissez votre destination', '选择目的地', 'अपना गंतव्य चुनें'],
   discover: ['استكشف مكاناً', 'Explore a place', 'Explorez un lieu', '探索一处地方', 'कोई जगह खोजें'],
@@ -73,3 +81,7 @@ export const globeDashboardWords: Record<string, string[]> = {
 
 export const globeText = (locale: Locale, key: string): string =>
   translate(locale, globeDashboardWords[key] ?? globeDashboardWords.details);
+
+/** Ready-made questions for the selected place (or its terrain when the point is free), each mapped to the assistant topic that answers it. */
+export const suggestedQuestions = [['qEquipment', 'equipment'], ['qPrecautions', 'precautions'], ['qSeasons', 'seasons'], ['qNature', 'nature'], ['qGroup', 'group'], ['qTerrain', 'terrain']] as const;
+export const suggestedQuestion = (locale: Locale, key: string, place: string): string => globeText(locale, key).replace('{place}', place);

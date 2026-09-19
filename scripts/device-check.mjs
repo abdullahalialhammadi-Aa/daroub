@@ -58,6 +58,17 @@ for(const device of devices){
     }
     if(report.creditRect&&report.prompt&&overlaps(report.creditRect,report.prompt))problems.push('credit overlaps prompt');
     if(report.creditRect&&report.creditRect.width>device.width*0.6)problems.push('credit too wide '+report.creditRect.width);
+    // The gesture hint is a quiet caption: visible, inside the viewport, never over a chip or the prompt.
+    await page.waitForTimeout(1200);
+    const hint=await page.evaluate(()=>{const el=document.querySelector('.gc-gesture-hint');if(!el)return null;const r=el.getBoundingClientRect();return {left:r.left,top:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height,opacity:Number(getComputedStyle(el).opacity),pointer:getComputedStyle(el).pointerEvents,text:el.textContent};});
+    if(!hint)problems.push('gesture hint missing');
+    else{
+      if(hint.opacity<0.9)problems.push('gesture hint not faded in ('+hint.opacity+')');
+      if(hint.pointer!=='none')problems.push('gesture hint intercepts pointer');
+      if(hint.left<-1||hint.right>device.width+1||hint.top<-1||hint.bottom>device.height+1)problems.push('gesture hint outside viewport '+JSON.stringify(hint));
+      if(report.prompt&&overlaps(hint,report.prompt))problems.push('gesture hint overlaps prompt');
+      for(const chip of report.chips)if(overlaps(hint,chip)){problems.push('gesture hint overlaps a chip');break;}
+    }
     // Drag rotates the globe: pixels change and the page stays on the globe (no lock). Touch on phones, mouse elsewhere.
     if(report.canvas){
       const cx=(report.canvas.left+report.canvas.right)/2,cy=(report.canvas.top+report.canvas.bottom)/2;
@@ -68,6 +79,7 @@ for(const device of devices){
       const after=await page.screenshot({clip:{x:Math.max(0,cx-80),y:Math.max(0,cy-80),width:160,height:160}});
       if(Buffer.compare(before,after)===0)problems.push('drag did not rotate the globe');
       if(await page.$('.gc-area'))problems.push('a drag locked the globe (area view opened)');
+      if(await page.$('.gc-gesture-hint'))problems.push('gesture hint stayed after touching the globe');
       // A tap on the globe locks it (area view), the reset control releases it.
       await page.mouse.click(cx,cy);await page.waitForSelector('.gc-area',{timeout:8000}).catch(()=>problems.push('tap did not open the area view'));
       await page.waitForTimeout(300);
@@ -76,6 +88,26 @@ for(const device of devices){
       if(layout.resetOverMenu)problems.push('reset overlaps menu button');
       if(!layout.reset)problems.push('reset control missing after lock');
       const reset=await page.$('.gc-reset');if(reset){await reset.click();await page.waitForTimeout(300);if(await page.$('.gc-area'))problems.push('reset did not release the lock');}
+    }
+    // Suggested questions: focusing the empty prompt lists them inside the viewport; picking one fills the field, send shows the answer card.
+    await page.click('#gc-question');
+    const list=await page.waitForSelector('.gc-suggest',{timeout:4000}).catch(()=>null);
+    if(!list)problems.push('suggestions did not open on focus');
+    else{
+      const box=await list.boundingBox(),options=await page.$$('.gc-suggest [role=option]');
+      if(!box||box.y<-1||box.y+box.height>device.height+1||box.x<-1||box.x+box.width>device.width+1)problems.push('suggestion list outside viewport '+JSON.stringify(box));
+      if(options.length<4)problems.push('too few suggestions: '+options.length);
+      const text=(await options[0]?.textContent())??'';
+      await options[0]?.click();await page.waitForTimeout(150);
+      const value=await page.inputValue('#gc-question');
+      if(!value||value!==text.trim())problems.push('picking a suggestion did not fill the prompt ('+value+')');
+      if(await page.$('.gc-suggest'))problems.push('suggestion list stayed open after a pick');
+      await page.click('.gc-send');
+      const answer=await page.waitForSelector('.gc-answer .companion-answer',{timeout:20000}).catch(()=>null);
+      if(!answer)problems.push('no answer card after sending a suggested question');
+      else if(!((await answer.textContent())??'').trim())problems.push('answer card is empty');
+      const shown=await page.evaluate(()=>document.querySelector('.gc-question')?.textContent??'');
+      if(shown!==text.trim())problems.push('answer card shows a different question');
     }
     await page.screenshot({path:`work/device-${device.name.replace(/\s+/g,'-').toLowerCase()}.png`});
   }catch(error){problems.push('error: '+(error?.message??error));}

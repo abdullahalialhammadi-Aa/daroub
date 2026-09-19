@@ -26,6 +26,15 @@ body.gc-chrome-open:has(.globe-core) .toolkit-bar{top:var(--gc-header-h,78px)}
 .orbital-page.globe-core .gc-brain-list button[aria-selected=true]{background:#123c3a;color:var(--orb-accent,#7be2d0)}
 .orbital-page.globe-core .gc-brain-list button small{color:var(--orb-muted,#b0c8cd);font-family:Manrope,sans-serif;font-size:.6875rem}
 .orbital-page.globe-core .gc-brain-note{padding:6px 10px 4px;font-size:.6875rem;color:var(--orb-muted,#b0c8cd);border-top:1px solid #24444c;margin-top:4px}
+/* suggested questions: a list that opens above the prompt when the empty field is focused */
+.orbital-page.globe-core .gc-suggest{position:absolute;bottom:calc(100% + 10px);left:0;right:0;margin:0;padding:6px;list-style:none;border-radius:14px;background:#0b2229f8;border:1px solid #345862;box-shadow:0 12px 40px #0008;display:grid;gap:2px;max-height:min(46svh,380px);overflow:auto;z-index:2}
+.orbital-page.globe-core .gc-suggest-note{display:flex;align-items:center;gap:6px;padding:4px 10px 6px;font-size:.6875rem;color:var(--orb-muted,#b0c8cd);border-bottom:1px solid #24444c;margin-bottom:2px}
+.orbital-page.globe-core .gc-suggest-note svg{color:var(--orb-accent,#7be2d0);flex:none}
+.orbital-page.globe-core .gc-suggest button{width:100%;display:flex;align-items:center;gap:10px;min-height:40px;padding:8px 10px;border-radius:9px;border:1px solid transparent;background:transparent;color:var(--orb-text,#edf7f6);font:inherit;font-size:.875rem;line-height:1.4;text-align:start;cursor:pointer}
+.orbital-page.globe-core .gc-suggest button svg{color:var(--orb-accent,#7be2d0);flex:none}
+.orbital-page.globe-core .gc-suggest button:hover,.orbital-page.globe-core .gc-suggest button:focus-visible{background:#123c3a;border-color:var(--orb-accent,#7be2d0);outline:0}
+.orbital-page.globe-core .gc-suggest button[aria-selected=true]{color:var(--orb-accent,#7be2d0);font-weight:600}
+.high-contrast .orbital-page.globe-core .gc-suggest{background:#000;border-color:#aaa}
 /* the latest answer: one card above the prompt */
 .orbital-page.globe-core .gc-answer{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));width:min(calc(100% - 32px),640px);max-height:min(56svh,520px);display:flex;flex-direction:column;border-radius:16px;background:#fbfcfd;color:#1b2e38;box-shadow:0 16px 48px #000a;z-index:45;overflow:hidden}
 .orbital-page.globe-core .gc-answer-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border-bottom:1px solid #dfe5e7;font-weight:700;font-size:.9375rem}
@@ -95,6 +104,14 @@ body.gc-chrome-open:has(.globe-core) .toolkit-bar{top:var(--gc-header-h,78px)}
 /* the credit is a label, never a click target: it must not float over the globe and swallow drags (bundle order can place the base rule after this one, hence the extra specificity) */
 .orbital-page.globe-core .nasa-credit{top:calc(8px + env(safe-area-inset-top,0px));bottom:auto;left:auto;right:auto;width:max-content;max-width:60vw;inset-inline-end:14px;text-align:end;font-size:.625rem;opacity:.8;pointer-events:none}
 .orbital-page.globe-core .nasa-credit a{pointer-events:auto}
+/* gesture hint: a quiet caption telling first-time visitors the globe turns and zooms; it fades in late and leaves at the first touch */
+.orbital-page.globe-core .gc-gesture-hint{position:absolute;left:50%;bottom:calc(var(--gc-row-h) + 8px);transform:translateX(-50%);z-index:6;margin:0;display:inline-flex;align-items:center;gap:6px;max-width:min(92%,420px);padding:5px 12px;border-radius:999px;border:1px solid #2c454d;background:#0b2229c8;color:var(--orb-muted,#b0c8cd);font-size:.75rem;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;pointer-events:none;backdrop-filter:blur(4px);opacity:0;animation:gc-hint-in .6s ease-out 1.2s forwards}
+.orbital-page.globe-core .gc-gesture-hint span{overflow:hidden;text-overflow:ellipsis}
+.orbital-page.globe-core .gc-gesture-hint svg{color:var(--orb-accent,#7be2d0);flex:none;animation:gc-hint-wave 2.4s ease-in-out 1.8s infinite}
+.orbital-page.globe-core .gc-gesture-hint[style]{bottom:auto}
+@keyframes gc-hint-in{to{opacity:1}}
+@keyframes gc-hint-wave{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+.reduce-motion .orbital-page.globe-core .gc-gesture-hint{opacity:1}
 /* terrain picker: a small list under the terrain chip */
 .orbital-page.globe-core .gc-terrain-menu{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:8;margin:0;padding:6px;list-style:none;display:grid;gap:4px;min-width:200px;border-radius:14px;border:1px solid #2f5a5e;background:#0b2229f2;box-shadow:0 12px 32px #000a;pointer-events:auto;backdrop-filter:blur(6px)}
 .orbital-page.globe-core .gc-terrain-menu button{width:100%;display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;border:1px solid transparent;background:transparent;color:var(--orb-text,#edf7f6);font:inherit;font-size:.875rem;cursor:pointer;text-align:start}

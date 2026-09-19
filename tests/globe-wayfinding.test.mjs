@@ -96,3 +96,16 @@ test('weather remains outside disclosures while saved actions and coordinate det
  assert.equal(elements(coordinates,n=>n.type==='bdi').length,2);
  assert.equal(h.find(n=>n.type==='globe-surface').length,1);
 });
+
+test('suggested prompt questions name the place in every locale and map to real assistant topics',()=>{
+ const {suggestedQuestions,suggestedQuestion}=load('lib/globe-dashboard-copy.ts');
+ const {assistantTopics}=load('lib/assistant-guide.ts');
+ assert.equal(suggestedQuestions.length,6);
+ for(const [key,topic] of suggestedQuestions){
+  assert.ok(assistantTopics.includes(topic),`${topic} is an assistant topic`);
+  assert.equal(globeDashboardWords[key].length,5,`${key} has five locales`);
+  for(const locale of locales){const text=suggestedQuestion(locale,key,'Jebel Jais');assert.ok(text.includes('Jebel Jais')&&!text.includes('{place}'),`${locale}/${key}: ${text}`);}
+ }
+ assert.equal(globeDashboardWords.gestureHint.length,5);
+ assert.equal(globeDashboardWords.suggestions.length,5);
+});
